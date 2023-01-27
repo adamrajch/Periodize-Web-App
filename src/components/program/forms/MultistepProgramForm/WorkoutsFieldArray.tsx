@@ -24,6 +24,7 @@ export default function WorkoutsFieldArray({
     control,
     name: `days.${nestIndex}.workouts`,
   });
+
   return (
     <div>
       {fields.map((item, k) => {

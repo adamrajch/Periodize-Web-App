@@ -74,6 +74,30 @@ export default function WizardWeekAtAGlanceForm() {
       },
     ]);
   }
+
+  // fix this
+  function addRecordToWorkout(dayIndex: number, workoutIndex: number, record) {
+    if (
+      getValues(`days.${dayIndex}.workouts.${workoutIndex}.type` === "single")
+    ) {
+      setValue(`days.${dayIndex}.workouts.${workoutIndex}.records`, [
+        ...getValues().days[index].workouts[workoutIndex]?.records,
+        {
+          ...record,
+          type: "single",
+          records: [
+            {
+              liftId: record.id,
+              sets: 5,
+              reps: 5,
+              rpe: undefined,
+              percent: undefined,
+            },
+          ],
+        },
+      ]);
+    }
+  }
   const renderCounter = useRef(0);
   renderCounter.current = renderCounter.current + 1;
   return (
