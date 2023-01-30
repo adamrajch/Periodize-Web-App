@@ -54,7 +54,7 @@ export default function AddWorkoutModal({
       </Modal>
 
       <Group position="center">
-        <Button onClick={() => setOpened(true)}>Open Modal</Button>
+        <Button onClick={() => setOpened(true)}>Add Exercise</Button>
       </Group>
     </>
   );
