@@ -1,6 +1,7 @@
 import { type NextPage } from "next";
 import { signIn, signOut, useSession } from "next-auth/react";
 import Head from "next/head";
+import Link from "next/link";
 import CreatePublicExerciseForm from "../components/exercise/CreatePublicExerciseForm";
 import ExerciseList from "../components/exercise/ExerciseList";
 import SearchLifts from "../components/exercise/SearchLifts";
@@ -18,6 +19,9 @@ const Home: NextPage = () => {
       </Head>
       <main>
         <div>
+          <nav>
+            <Link href="create/details">Create A Progam</Link>
+          </nav>
           <ColorSwitch />
 
           <AuthShowcase />
