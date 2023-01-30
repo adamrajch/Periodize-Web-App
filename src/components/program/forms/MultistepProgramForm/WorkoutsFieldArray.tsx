@@ -8,45 +8,46 @@ import HFTextInput from "../../../ui/HFTexInput";
 import RecordsFieldArray from "./RecordsFieldArray";
 
 type Props = {
-  nestIndex: number;
+  dayIndex: number;
   control: Control<WizardDaysFormType>;
   register: any;
   errors: any;
+  addRecordToWorkout: (dayIndex: number, workoutIndex: number) => void;
 };
 
 export default function WorkoutsFieldArray({
-  nestIndex,
+  dayIndex,
   control,
   register,
   errors,
+  addRecordToWorkout,
 }: Props) {
   const { fields, remove, append } = useFieldArray({
     control,
-    name: `days.${nestIndex}.workouts`,
+    name: `days.${dayIndex}.workouts` as const,
   });
 
   return (
     <div>
-      {fields.map((item, k) => {
+      {fields.map((item, workoutIndex) => {
         return (
           <>
             <Group key={item.id}>
               <HFTextInput
-                label={k + 1}
-                error={errors.days?.[nestIndex]?.workouts?.[k].name}
-                registerProps={register(`days.${nestIndex}.workouts.${k}.name`)}
-                placeholder={`Workout ${k + 1}`}
+                label={workoutIndex + 1}
+                error={errors.days?.[dayIndex]?.workouts?.[workoutIndex].name}
+                registerProps={register(
+                  `days.${dayIndex}.workouts.${workoutIndex}.name`
+                )}
+                placeholder={`Workout ${workoutIndex + 1}`}
               />
               <ActionIcon
                 variant="filled"
                 color="red"
                 onClick={() => {
                   // add a record
-                  append({
-                    name: "",
-                    type: "single",
-                    records: [],
-                  });
+
+                  addRecordToWorkout(dayIndex, workoutIndex);
                 }}
               >
                 <IconPlus />
@@ -54,15 +55,15 @@ export default function WorkoutsFieldArray({
               <ActionIcon
                 variant="filled"
                 color="red"
-                onClick={() => remove(k)}
+                onClick={() => remove(workoutIndex)}
               >
                 <IconX />
               </ActionIcon>
             </Group>
             <RecordsFieldArray
               {...{ control, register, errors }}
-              workoutIndex={k}
-              dayIndex={nestIndex}
+              workoutIndex={workoutIndex}
+              dayIndex={dayIndex}
             />
           </>
         );

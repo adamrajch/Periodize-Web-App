@@ -1,4 +1,30 @@
 import { z } from "zod";
+export const RecordSchema = z.object({
+  sets: z
+    .number()
+    .min(1, { message: "Minimum 1 set" })
+    .max(100, { message: "maximum 100 sets" })
+    .int({ message: "must be whole number" }),
+  reps: z
+    .number()
+    .min(1, { message: "Minimum 1 set" })
+    .max(100, { message: "maximum 100 sets" })
+    .int({ message: "must be whole number" }),
+  rpe: z
+    .number()
+    .min(1, { message: "RPE= 1-10" })
+    .max(10, { message: "RPE = 1-10" })
+    .multipleOf(0.5, { message: "Must be a multiple of 0.5" })
+    .optional(),
+  percent: z
+    .number()
+    .min(1, { message: "Must be between 1-100" })
+    .max(100, { message: "Must be between 1-100" })
+    .optional(),
+  liftId: z.string().min(1),
+});
+
+export type RecordSchemaType = z.infer<typeof RecordSchema>;
 
 export const SingleWorkout = z.object({
   name: z
@@ -33,6 +59,8 @@ export const SingleWorkout = z.object({
     })
   ),
 });
+
+export type SingleWorkoutType = z.infer<typeof SingleWorkout>;
 
 export const ClusterWorkout = z.object({
   name: z

@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ActionIcon, Button, Grid, Group, Stack, Tabs } from "@mantine/core";
+import { ActionIcon, Button, Group, Stack, Tabs } from "@mantine/core";
 import type { Exercise } from "@prisma/client";
 import { IconFileImport, IconPlus } from "@tabler/icons";
 
@@ -58,7 +58,7 @@ export default function WizardWeekAtAGlanceForm() {
 
   function addSingleWorkout(index: number, exercise: Exercise) {
     setValue(`days.${index}.workouts`, [
-      ...getValues().days[index].workouts,
+      ...getValues(`days.${index}.workouts`),
       {
         ...exercise,
         type: "single",
@@ -75,29 +75,22 @@ export default function WizardWeekAtAGlanceForm() {
     ]);
   }
 
-  // fix this
-  function addRecordToWorkout(dayIndex: number, workoutIndex: number, record) {
-    if (
-      getValues(`days.${dayIndex}.workouts.${workoutIndex}.type` === "single")
-    ) {
-      setValue(`days.${dayIndex}.workouts.${workoutIndex}.records`, [
-        ...getValues().days[index].workouts[workoutIndex]?.records,
-        {
-          ...record,
-          type: "single",
-          records: [
-            {
-              liftId: record.id,
-              sets: 5,
-              reps: 5,
-              rpe: undefined,
-              percent: undefined,
-            },
-          ],
-        },
-      ]);
-    }
+  function addRecordToWorkout(dayIndex: number, workoutIndex: number) {
+    // set record based on type of workout (load , distance , time)
+    const w = getValues(`days.${dayIndex}.workouts.${workoutIndex}`);
+
+    setValue(`days.${dayIndex}.workouts.${workoutIndex}.records`, [
+      ...getValues(`days.${dayIndex}.workouts.${workoutIndex}.records`),
+      {
+        rpe: 5,
+        percent: undefined,
+        sets: 3,
+        reps: 5,
+        liftId: "",
+      },
+    ]);
   }
+
   const renderCounter = useRef(0);
   renderCounter.current = renderCounter.current + 1;
   return (
@@ -130,28 +123,30 @@ export default function WizardWeekAtAGlanceForm() {
                 </ActionIcon>
                 <AddWorkoutModal addWorkout={addSingleWorkout} index={index} />
               </Group>
-              <Grid>
-                <WorkoutsFieldArray
-                  {...{ control, register, errors }}
-                  nestIndex={index}
-                />
-              </Grid>
+
+              <WorkoutsFieldArray
+                {...{ control, register, errors }}
+                dayIndex={index}
+                addRecordToWorkout={addRecordToWorkout}
+              />
             </Tabs.Panel>
           ))}
         </Tabs>
         <Stack>
+          <Group>
+            <Button onClick={() => reset()}>Reset</Button>
+            <Button
+              variant="filled"
+              loading={isSubmitting}
+              // disabled={!isValid}
+              type="submit"
+            >
+              Submit
+            </Button>
+          </Group>
+
           <pre>{JSON.stringify(contextForm, null, 2)}</pre>
           <pre>VALUES: {JSON.stringify(watch(), null, 2)}</pre>
-
-          <Button onClick={() => reset()}>Reset</Button>
-          <Button
-            variant="filled"
-            loading={isSubmitting}
-            // disabled={!isValid}
-            type="submit"
-          >
-            Submit
-          </Button>
         </Stack>
       </form>
     </>

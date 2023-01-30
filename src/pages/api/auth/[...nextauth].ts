@@ -2,23 +2,22 @@ import NextAuth, { type NextAuthOptions } from "next-auth";
 // Prisma adapter for NextAuth, optional and can be removed
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import CredentialsProvider from "next-auth/providers/credentials";
-import type { GithubProfile } from "next-auth/providers/github";
 import GithubProvider from "next-auth/providers/github";
 import { env } from "../../../env/server.mjs";
 import { prisma } from "../../../server/db";
 
 export const authOptions: NextAuthOptions = {
   // Include user.id on session
-  session: {
-    strategy: "jwt",
-  },
+  // session: {
+  //   strategy: "jwt",
+  // },
   callbacks: {
-    // session({ session, user }) {
-    //   if (session.user) {
-    //     session.user.id = user.id;
-    //   }
-    //   return session;
-    // },
+    session({ session, user }) {
+      if (session.user) {
+        session.user.id = user.id;
+      }
+      return session;
+    },
     jwt: async ({ token, user }) => {
       if (user) {
         token.id = user.id;
@@ -27,13 +26,13 @@ export const authOptions: NextAuthOptions = {
 
       return token;
     },
-    session: async ({ session, token }) => {
-      if (token) {
-        session.id = token.id;
-      }
+    // session: async ({ session, token }) => {
+    //   if (token) {
+    //     session.id = token.id;
+    //   }
 
-      return session;
-    },
+    //   return session;
+    // },
     async signIn({ user, profile }) {
       console.log("callback.signIn (user): ", user);
       console.log("callback.signIn (profile): ", profile);
@@ -47,15 +46,15 @@ export const authOptions: NextAuthOptions = {
     GithubProvider({
       clientId: env.GITHUB_CLIENT_ID,
       clientSecret: env.GITHUB_CLIENT_SECRET,
-      profile(profile: GithubProfile) {
-        return {
-          id: profile.id.toString(),
-          name: profile.name,
-          email: profile.email,
-          image: profile.avatar_url,
-          role: "USER",
-        };
-      },
+      // profile(profile: GithubProfile) {
+      //   return {
+      //     id: profile.id.toString(),
+      //     name: profile.name,
+      //     email: profile.email,
+      //     image: profile.avatar_url,
+      //     user: profile,
+      //   };
+      // },
     }),
     CredentialsProvider({
       name: "Credentials",
@@ -71,10 +70,7 @@ export const authOptions: NextAuthOptions = {
           // Any object returned will be saved in `user` property of the JWT
           return user;
         } else {
-          // If you return null then an error will be displayed advising the user to check their details.
           return null;
-
-          // You can also Reject this callback with an Error thus the user will be sent to the error page with the error message as a query parameter
         }
       },
     }),

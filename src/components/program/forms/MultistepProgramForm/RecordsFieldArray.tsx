@@ -22,7 +22,7 @@ export default function RecordsFieldArray({
 }: RecordsFieldArrayProps) {
   const { fields, remove, append } = useFieldArray({
     control,
-    name: `days.${dayIndex}.workouts.${workoutIndex}.records`,
+    name: `days.${dayIndex}.workouts.${workoutIndex}.records` as const,
   });
   return (
     <div>
