@@ -63,13 +63,16 @@ export default function WizardWeekAtAGlanceForm() {
         ...exercise,
         type: "single",
         records: [
-          {
-            liftId: exercise.id,
-            sets: 5,
-            reps: 5,
-            rpe: undefined,
-            percent: undefined,
-          },
+          [
+            {
+              periodization: "none",
+              weekSpan: 1,
+              sets: 5,
+              reps: 5,
+              rpe: undefined,
+              percent: undefined,
+            },
+          ],
         ],
       },
     ]);
@@ -81,13 +84,16 @@ export default function WizardWeekAtAGlanceForm() {
 
     setValue(`days.${dayIndex}.workouts.${workoutIndex}.records`, [
       ...getValues(`days.${dayIndex}.workouts.${workoutIndex}.records`),
-      {
-        rpe: 5,
-        percent: undefined,
-        sets: 3,
-        reps: 5,
-        liftId: "",
-      },
+      [
+        {
+          weekSpan: "1",
+          rpe: undefined,
+          percent: undefined,
+          sets: 3,
+          reps: 5,
+          periodization: "none",
+        },
+      ],
     ]);
   }
 

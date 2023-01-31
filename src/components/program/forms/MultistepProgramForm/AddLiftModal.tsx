@@ -1,8 +1,14 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button, Group, Modal, useMantineTheme } from "@mantine/core";
+import {
+  Button,
+  Group,
+  Modal,
+  NativeSelect,
+  useMantineTheme,
+} from "@mantine/core";
 import type { Exercise } from "@prisma/client";
 import { useState } from "react";
-import { useFieldArray, useForm } from "react-hook-form";
+import { Controller, useFieldArray, useForm } from "react-hook-form";
 import { z } from "zod";
 import useSearchExercises from "../../../../hooks/useSearchExercises";
 import { RecordSchema } from "../../../../types/ProgramTypes";
@@ -13,6 +19,13 @@ type AddWorkoutModalProps = {
   index: number;
 };
 
+const PROGRAM_PERIODIZATION_STYLES = [
+  "none",
+  "linear",
+  "ungulating",
+  "step",
+  "custom",
+];
 const WorkoutFormSchema = z.object({
   programStyle: z.enum(["none", "linear", "ungulating", "step", "custom"]),
   records: z.array(RecordSchema),
@@ -70,6 +83,20 @@ export default function AddWorkoutModal({
             placeholder="Squat"
             defaultValue={query}
             onChange={(event) => setQuery(event.currentTarget.value)}
+          />
+          <Controller
+            control={control}
+            name="programStyle"
+            render={({ field: { onChange, onBlur } }) => (
+              <NativeSelect
+                data={PROGRAM_PERIODIZATION_STYLES}
+                label="Disciplines to be trained"
+                placeholder="Pick all relative"
+                onChange={onChange}
+                onBlur={onBlur}
+                error={errors.programStyle?.message}
+              />
+            )}
           />
         </Group>
 

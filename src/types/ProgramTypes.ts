@@ -26,38 +26,49 @@ export const RecordSchema = z.object({
 
 export type RecordSchemaType = z.infer<typeof RecordSchema>;
 
+export const SingleRecord = z.object({
+  sets: z
+    .number()
+    .min(1, { message: "Minimum 1 set" })
+    .max(100, { message: "maximum 100 sets" })
+    .int({ message: "must be whole number" }),
+  reps: z
+    .number()
+    .min(1, { message: "Minimum 1 set" })
+    .max(100, { message: "maximum 100 sets" })
+    .int({ message: "must be whole number" }),
+  rpe: z
+    .number()
+    .min(1, { message: "RPE= 1-10" })
+    .max(10, { message: "RPE = 1-10" })
+    .multipleOf(0.5, { message: "Must be a multiple of 0.5" })
+    .optional(),
+  percent: z
+    .number()
+    .min(1, { message: "Must be between 1-100" })
+    .max(100, { message: "Must be between 1-100" })
+    .optional(),
+  weekSpan: z.number().min(1, { message: "Must be between 1-16" }),
+  periodization: z.enum([
+    "none",
+    "linear",
+    "undulating",
+    "block",
+    "step",
+    "custom",
+  ]),
+});
+
+export type SingleRecordType = z.infer<typeof SingleRecord>;
+
 export const SingleWorkout = z.object({
+  exerciseId: z.string().min(1),
   name: z
     .string()
     .min(1, { message: "Minimum 1 set" })
     .max(20, { message: "Must be 20 or fewer characters long" }),
   type: z.literal("single"),
-  records: z.array(
-    z.object({
-      sets: z
-        .number()
-        .min(1, { message: "Minimum 1 set" })
-        .max(100, { message: "maximum 100 sets" })
-        .int({ message: "must be whole number" }),
-      reps: z
-        .number()
-        .min(1, { message: "Minimum 1 set" })
-        .max(100, { message: "maximum 100 sets" })
-        .int({ message: "must be whole number" }),
-      rpe: z
-        .number()
-        .min(1, { message: "RPE= 1-10" })
-        .max(10, { message: "RPE = 1-10" })
-        .multipleOf(0.5, { message: "Must be a multiple of 0.5" })
-        .optional(),
-      percent: z
-        .number()
-        .min(1, { message: "Must be between 1-100" })
-        .max(100, { message: "Must be between 1-100" })
-        .optional(),
-      liftId: z.string().min(1),
-    })
-  ),
+  records: z.array(z.array(SingleRecord)),
 });
 
 export type SingleWorkoutType = z.infer<typeof SingleWorkout>;
@@ -79,6 +90,16 @@ export const Workout = z.discriminatedUnion("type", [
   ClusterWorkout,
 ]);
 
+// export const Day = z.object({
+//   name: z
+//     .string()
+//     .min(1, { message: "Required" })
+//     .max(20, { message: "Must be 20 or fewer characters long" }),
+//   summary: z
+//     .string()
+//     .max(50, { message: "Must be 50 or fewer characters long" }),
+//   workouts: z.array(Workout),
+// });
 export const Day = z.object({
   name: z
     .string()
@@ -141,11 +162,10 @@ export type DayArrayType = z.infer<typeof DayArray>;
 export const WizardDaysSchema = z.object({
   days: DayArray,
 });
+export type WizardDaysFormType = z.infer<typeof WizardDaysSchema>;
 
 export type WizardDetailsFormType = Omit<ProgramTemplateSchemaType, "weeks">;
 export type WizardWeeksFormType = Pick<ProgramTemplateSchemaType, "weeks">;
 
 export type WeekType = z.infer<typeof Week>;
 export type DayType = z.infer<typeof Day>;
-
-export type WizardDaysFormType = z.infer<typeof WizardDaysSchema>;
