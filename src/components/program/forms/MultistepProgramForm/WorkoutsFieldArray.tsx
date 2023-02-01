@@ -1,10 +1,9 @@
-import { ActionIcon, Group } from "@mantine/core";
+import { ActionIcon, Group, Text } from "@mantine/core";
 import { IconPlus, IconX } from "@tabler/icons";
 
 import { useFieldArray } from "react-hook-form";
 import type { Control } from "react-hook-form/dist/types";
 import type { WizardDaysFormType } from "../../../../types/ProgramTypes";
-import HFTextInput from "../../../ui/HFTexInput";
 import RecordsFieldArray from "./RecordsFieldArray";
 
 type Props = {
@@ -33,14 +32,7 @@ export default function WorkoutsFieldArray({
         return (
           <>
             <Group key={item.id}>
-              <HFTextInput
-                label={workoutIndex + 1}
-                error={errors.days?.[dayIndex]?.workouts?.[workoutIndex].name}
-                registerProps={register(
-                  `days.${dayIndex}.workouts.${workoutIndex}.name`
-                )}
-                placeholder={`Workout ${workoutIndex + 1}`}
-              />
+              <Text>{item.name}</Text>
               <ActionIcon
                 variant="filled"
                 color="red"
@@ -64,6 +56,7 @@ export default function WorkoutsFieldArray({
               {...{ control, register, errors }}
               workoutIndex={workoutIndex}
               dayIndex={dayIndex}
+              workout={item}
             />
           </>
         );

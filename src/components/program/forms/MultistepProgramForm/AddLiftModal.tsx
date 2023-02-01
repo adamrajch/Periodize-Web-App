@@ -10,24 +10,22 @@ import type { Exercise } from "@prisma/client";
 import { useState } from "react";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
 import { z } from "zod";
+import { PROGRAM_PERIODIZATION_STYLES } from "../../../../constants/CreateProgram";
 import useSearchExercises from "../../../../hooks/useSearchExercises";
+import type { SingleWorkoutType } from "../../../../types/ProgramTypes";
 import { RecordSchema } from "../../../../types/ProgramTypes";
 import HFTextInput from "../../../ui/HFTexInput";
 
 type AddWorkoutModalProps = {
-  addWorkout: (index: number, exercise: Exercise) => void;
+  addWorkout: (
+    index: number,
+    exercise: Pick<SingleWorkoutType, "exerciseId" | "name">
+  ) => void;
   index: number;
 };
 
-const PROGRAM_PERIODIZATION_STYLES = [
-  "none",
-  "linear",
-  "ungulating",
-  "step",
-  "custom",
-];
 const WorkoutFormSchema = z.object({
-  programStyle: z.enum(["none", "linear", "ungulating", "step", "custom"]),
+  periodization: z.enum(["none", "linear", "ungulating", "step", "custom"]),
   records: z.array(RecordSchema),
 });
 
@@ -38,17 +36,14 @@ export default function AddWorkoutModal({
 }: AddWorkoutModalProps) {
   const [opened, setOpened] = useState(false);
   const theme = useMantineTheme();
-  const { query, exercises, setQuery, resetQuery } = useSearchExercises();
+  const { query, recordList, setQuery, resetQuery } = useSearchExercises();
 
   const {
-    handleSubmit,
-    register,
-    reset,
     control,
-    formState: { errors, isSubmitting, isValid },
+    formState: { errors },
   } = useForm<WorkoutFormType>({
     defaultValues: {
-      programStyle: "none",
+      periodization: "none",
       records: [],
     },
     resolver: zodResolver(WorkoutFormSchema),
@@ -86,7 +81,7 @@ export default function AddWorkoutModal({
           />
           <Controller
             control={control}
-            name="programStyle"
+            name="periodization"
             render={({ field: { onChange, onBlur } }) => (
               <NativeSelect
                 data={PROGRAM_PERIODIZATION_STYLES}
@@ -94,21 +89,26 @@ export default function AddWorkoutModal({
                 placeholder="Pick all relative"
                 onChange={onChange}
                 onBlur={onBlur}
-                error={errors.programStyle?.message}
+                error={errors.periodization?.message}
               />
             )}
           />
         </Group>
 
         <div>
-          {exercises?.map((lift) => (
+          {recordList?.map((exercise: Exercise) => (
             <Button
-              key={lift.id}
+              key={exercise.id}
               onClick={() => {
-                addWorkout(index, lift), resetQuery(), setOpened(false);
+                addWorkout(index, {
+                  exerciseId: exercise.id,
+                  name: exercise.name,
+                }),
+                  resetQuery(),
+                  setOpened(false);
               }}
             >
-              {lift.name}
+              {exercise.name}
             </Button>
           ))}
         </div>

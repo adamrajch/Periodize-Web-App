@@ -17,3 +17,11 @@ export const PROGRAM_CATEGORIES = [
   },
   { value: "sport", label: "Sport" },
 ];
+
+export const PROGRAM_PERIODIZATION_STYLES = [
+  "none",
+  "linear",
+  "ungulating",
+  "step",
+  "custom",
+];

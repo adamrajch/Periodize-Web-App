@@ -1,6 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ActionIcon, Button, Group, Stack, Tabs } from "@mantine/core";
-import type { Exercise } from "@prisma/client";
 import { IconFileImport, IconPlus } from "@tabler/icons";
 
 import { useRouter } from "next/router";
@@ -56,23 +55,25 @@ export default function WizardWeekAtAGlanceForm() {
     [updateForm, router]
   );
 
-  function addSingleWorkout(index: number, exercise: Exercise) {
+  function addSingleWorkout(index: number, exercise: any) {
     setValue(`days.${index}.workouts`, [
       ...getValues(`days.${index}.workouts`),
       {
         ...exercise,
         type: "single",
         records: [
-          [
-            {
-              periodization: "none",
-              weekSpan: 1,
-              sets: 5,
-              reps: 5,
-              rpe: undefined,
-              percent: undefined,
-            },
-          ],
+          {
+            periodization: "none",
+            weekProgression: [
+              {
+                weekSpan: 1,
+                sets: 5,
+                reps: 5,
+                rpe: undefined,
+                percent: undefined,
+              },
+            ],
+          },
         ],
       },
     ]);
@@ -84,16 +85,19 @@ export default function WizardWeekAtAGlanceForm() {
 
     setValue(`days.${dayIndex}.workouts.${workoutIndex}.records`, [
       ...getValues(`days.${dayIndex}.workouts.${workoutIndex}.records`),
-      [
-        {
-          weekSpan: "1",
-          rpe: undefined,
-          percent: undefined,
-          sets: 3,
-          reps: 5,
-          periodization: "none",
-        },
-      ],
+
+      {
+        periodization: "none",
+        weekProgression: [
+          {
+            weekSpan: 1,
+            sets: 5,
+            reps: 5,
+            rpe: undefined,
+            percent: undefined,
+          },
+        ],
+      },
     ]);
   }
 

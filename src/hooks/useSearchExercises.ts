@@ -18,7 +18,7 @@ export default function useSearchExercises() {
   }
   return {
     query,
-    exercises: data,
+    recordList: data,
     setQuery,
     resetQuery,
   };

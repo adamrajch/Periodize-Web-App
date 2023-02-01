@@ -1,9 +1,12 @@
-import { ActionIcon, SimpleGrid } from "@mantine/core";
+import { ActionIcon, NativeSelect, SimpleGrid } from "@mantine/core";
 import { IconX } from "@tabler/icons";
 import type { Control } from "react-hook-form";
-import { useFieldArray } from "react-hook-form";
-import type { WizardDaysFormType } from "../../../../types/ProgramTypes";
-import HFTextInput from "../../../ui/HFTexInput";
+import { Controller, useFieldArray } from "react-hook-form";
+import { PROGRAM_PERIODIZATION_STYLES } from "../../../../constants/CreateProgram";
+import type {
+  SingleWorkoutType,
+  WizardDaysFormType,
+} from "../../../../types/ProgramTypes";
 
 type RecordsFieldArrayProps = {
   dayIndex: number;
@@ -11,6 +14,7 @@ type RecordsFieldArrayProps = {
   control: Control<WizardDaysFormType>;
   register: any;
   errors: any;
+  workout: SingleWorkoutType;
 };
 
 export default function RecordsFieldArray({
@@ -19,6 +23,7 @@ export default function RecordsFieldArray({
   control,
   errors,
   register,
+  workout,
 }: RecordsFieldArrayProps) {
   const { fields, remove, append } = useFieldArray({
     control,
@@ -29,7 +34,21 @@ export default function RecordsFieldArray({
       {fields.map((record, rI) => (
         <>
           <SimpleGrid cols={5}>
-            <HFTextInput
+            <Controller
+              control={control}
+              name={`days.${dayIndex}.workouts.${workoutIndex}.records.${rI}.periodization`}
+              render={({ field: { onChange, onBlur } }) => (
+                <NativeSelect
+                  data={PROGRAM_PERIODIZATION_STYLES}
+                  label="Disciplines to be trained"
+                  placeholder="Pick all relative"
+                  onChange={onChange}
+                  onBlur={onBlur}
+                  error={errors.periodization?.message}
+                />
+              )}
+            />
+            {/* <HFTextInput
               label="sets"
               error={
                 errors.days?.[dayIndex]?.workouts?.[workoutIndex].records?.[rI]
@@ -68,7 +87,7 @@ export default function RecordsFieldArray({
               registerProps={register(
                 `days.${dayIndex}.workouts.${workoutIndex}.records.${rI}.percent`
               )}
-            />
+            /> */}
             <ActionIcon variant="filled" color="red" onClick={() => remove(rI)}>
               <IconX />
             </ActionIcon>
