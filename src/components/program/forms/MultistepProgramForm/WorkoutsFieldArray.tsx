@@ -1,9 +1,12 @@
-import { ActionIcon, Group, Text } from "@mantine/core";
+import { ActionIcon, Group, Stack, Text } from "@mantine/core";
 import { IconPlus, IconX } from "@tabler/icons";
 
 import { useFieldArray } from "react-hook-form";
 import type { Control } from "react-hook-form/dist/types";
-import type { WizardDaysFormType } from "../../../../types/ProgramTypes";
+import type {
+  SingleWorkoutType,
+  WizardDaysFormType,
+} from "../../../../types/ProgramTypes";
 import RecordsFieldArray from "./RecordsFieldArray";
 
 type Props = {
@@ -12,6 +15,7 @@ type Props = {
   register: any;
   errors: any;
   addRecordToWorkout: (dayIndex: number, workoutIndex: number) => void;
+  getValues: unknown;
 };
 
 export default function WorkoutsFieldArray({
@@ -20,6 +24,7 @@ export default function WorkoutsFieldArray({
   register,
   errors,
   addRecordToWorkout,
+  getValues,
 }: Props) {
   const { fields, remove, append } = useFieldArray({
     control,
@@ -30,8 +35,8 @@ export default function WorkoutsFieldArray({
     <div>
       {fields.map((item, workoutIndex) => {
         return (
-          <>
-            <Group key={item.id}>
+          <Stack key={item.id}>
+            <Group>
               <Text>{item.name}</Text>
               <ActionIcon
                 variant="filled"
@@ -56,9 +61,10 @@ export default function WorkoutsFieldArray({
               {...{ control, register, errors }}
               workoutIndex={workoutIndex}
               dayIndex={dayIndex}
-              workout={item}
+              workout={item as SingleWorkoutType}
+              getValues={getValues}
             />
-          </>
+          </Stack>
         );
       })}
     </div>

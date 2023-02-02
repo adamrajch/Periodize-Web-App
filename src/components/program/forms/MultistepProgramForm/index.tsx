@@ -1,15 +1,14 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ActionIcon, Button, Group, MultiSelect, Stack } from "@mantine/core";
 import { IconMinus } from "@tabler/icons";
-import HFTextInput from "@ui/HFTexInput";
-import HFTextarea from "@ui/HFTextarea";
-// import NumberInput from "@ui/NumberInput";
 
 import { useCallback, useRef } from "react";
 import type { SubmitHandler } from "react-hook-form";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
 import type { ProgramTemplateSchemaType } from "../../../../types/ProgramTypes";
 import { ProgramTemplateSchema } from "../../../../types/ProgramTypes";
+import HFTextInput from "../../../ui/HFTexInput";
+import HFTextarea from "../../../ui/HFTextarea";
 
 export default function MultistepProgramForm() {
   const {

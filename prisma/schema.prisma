@@ -20,7 +20,7 @@ model User {
     accounts      Account[]
     sessions      Session[]
     exercises	  ExercisesOnUsers[]
- 
+    programs      Program[]
 }
 
 model Exercise{
@@ -33,6 +33,7 @@ model Exercise{
 	distance	    Boolean 
 	time		    Boolean
     categories      String[] 
+
 }
 
 model ExercisesOnUsers{
@@ -45,6 +46,20 @@ model ExercisesOnUsers{
 
     @@id([exerciseId, userId])
 }
+
+model Program {
+    id              String  @id @default(uuid())
+    name            String
+    createdAt		DateTime	@default(now())
+	updatedAt		DateTime 	@updatedAt
+    categories      String[] 
+    numWeeks        Int
+    author          User    @relation(fields: [authorId], references: [id])
+    authorId        String
+    template        Json?
+}
+
+
 // Necessary for Next auth
 model Account {
     id                String  @id @default(cuid())

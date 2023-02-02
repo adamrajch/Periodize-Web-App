@@ -48,7 +48,7 @@ export const SingleRecord = z.object({
     .min(1, { message: "Must be between 1-100" })
     .max(100, { message: "Must be between 1-100" })
     .optional(),
-  weekSpan: z.number().min(1, { message: "Must be between 1-16" }),
+  status: z.literal("record"),
 });
 
 export type SingleRecordType = z.infer<typeof SingleRecord>;
@@ -70,7 +70,12 @@ export const SingleWorkout = z.object({
         "step",
         "custom",
       ]),
-      weekProgression: z.array(SingleRecord),
+      weekProgression: z.array(
+        z.discriminatedUnion("status", [
+          SingleRecord,
+          z.object({ status: z.literal("empty") }),
+        ])
+      ),
     })
   ),
 });
@@ -149,6 +154,7 @@ export const ProgramTemplateSchema = z.object({
     .nonempty({
       message: "Must chose atleast one discipline",
     }),
+  numWeeks: z.number().int().positive().lt(16),
   weeks: z.array(Week),
 });
 export type ProgramTemplateSchemaType = z.infer<typeof ProgramTemplateSchema>;

@@ -120,3 +120,11 @@ export default function AddWorkoutModal({
     </>
   );
 }
+
+// const buttonRightSection = (
+//   <Group>
+//     <Kbd>Ctrl</Kbd>
+//     <span style={{ margin: "0 5px" }}>+</span>
+//     <Kbd>K</Kbd>
+//   </Group>
+// );

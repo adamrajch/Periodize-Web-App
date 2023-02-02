@@ -16,7 +16,7 @@ type InputProps = NumberInputProps & {
     disabled?: boolean;
   };
 };
-export default function HFNumberInput({
+export default function NumberInput22({
   error,
   registerProps,
   ...rest

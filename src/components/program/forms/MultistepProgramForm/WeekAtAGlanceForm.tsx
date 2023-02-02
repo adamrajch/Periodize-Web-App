@@ -66,7 +66,7 @@ export default function WizardWeekAtAGlanceForm() {
             periodization: "none",
             weekProgression: [
               {
-                weekSpan: 1,
+                status: "record",
                 sets: 5,
                 reps: 5,
                 rpe: undefined,
@@ -90,11 +90,11 @@ export default function WizardWeekAtAGlanceForm() {
         periodization: "none",
         weekProgression: [
           {
-            weekSpan: 1,
             sets: 5,
             reps: 5,
             rpe: undefined,
             percent: undefined,
+            status: "record",
           },
         ],
       },
@@ -108,55 +108,67 @@ export default function WizardWeekAtAGlanceForm() {
       <h1>Renders: {renderCounter.current}</h1>
       <h1>Week Template</h1>
       <form onSubmit={handleSubmit(submitForm)}>
-        <Tabs keepMounted={false} value={activeTab} onTabChange={setActiveTab}>
-          <Tabs.List>
-            {DAYS_OF_WEEK.map((day, i) => (
-              <Tabs.Tab key={day} value={`${i}`}>
-                {day}
-              </Tabs.Tab>
-            ))}
-          </Tabs.List>
-          {fields.map((day, index) => (
-            <Tabs.Panel key={day.id} value={`${index}`}>
-              <Group>
-                <HFTextInput
-                  label={index + 1}
-                  error={errors.days?.[index]?.name?.message}
-                  registerProps={register(`days.${index}.name` as const)}
-                  placeholder={`Day ${index + 1}`}
-                />
-                <ActionIcon variant="filled">
-                  <IconFileImport />
-                </ActionIcon>
-                <ActionIcon variant="filled">
-                  <IconPlus />
-                </ActionIcon>
-                <AddWorkoutModal addWorkout={addSingleWorkout} index={index} />
-              </Group>
-
-              <WorkoutsFieldArray
-                {...{ control, register, errors }}
-                dayIndex={index}
-                addRecordToWorkout={addRecordToWorkout}
-              />
-            </Tabs.Panel>
-          ))}
-        </Tabs>
         <Stack>
-          <Group>
-            <Button onClick={() => reset()}>Reset</Button>
-            <Button
-              variant="filled"
-              loading={isSubmitting}
-              // disabled={!isValid}
-              type="submit"
-            >
-              Submit
-            </Button>
-          </Group>
+          <Tabs
+            keepMounted={false}
+            value={activeTab}
+            onTabChange={setActiveTab}
+          >
+            <Tabs.List>
+              {DAYS_OF_WEEK.map((day, i) => (
+                <Tabs.Tab key={day} value={`${i}`}>
+                  {day}
+                </Tabs.Tab>
+              ))}
+            </Tabs.List>
+            {fields.map((day, index) => (
+              <Tabs.Panel key={day.id} value={`${index}`}>
+                <Stack>
+                  <Group>
+                    <HFTextInput
+                      label={index + 1}
+                      error={errors.days?.[index]?.name?.message}
+                      registerProps={register(`days.${index}.name` as const)}
+                      placeholder={`Day ${index + 1}`}
+                    />
+                    <ActionIcon variant="filled">
+                      <IconFileImport />
+                    </ActionIcon>
+                    <ActionIcon variant="filled">
+                      <IconPlus />
+                    </ActionIcon>
+                    <AddWorkoutModal
+                      addWorkout={addSingleWorkout}
+                      index={index}
+                    />
+                  </Group>
 
-          <pre>{JSON.stringify(contextForm, null, 2)}</pre>
-          <pre>VALUES: {JSON.stringify(watch(), null, 2)}</pre>
+                  <WorkoutsFieldArray
+                    {...{ control, register, errors }}
+                    dayIndex={index}
+                    addRecordToWorkout={addRecordToWorkout}
+                    getValues={getValues}
+                  />
+                </Stack>
+              </Tabs.Panel>
+            ))}
+          </Tabs>
+          <Stack>
+            <Group>
+              <Button onClick={() => reset()}>Reset</Button>
+              <Button
+                variant="filled"
+                loading={isSubmitting}
+                // disabled={!isValid}
+                type="submit"
+              >
+                Submit
+              </Button>
+            </Group>
+
+            <pre>{JSON.stringify(contextForm, null, 2)}</pre>
+            <pre>VALUES: {JSON.stringify(watch(), null, 2)}</pre>
+          </Stack>
         </Stack>
       </form>
     </>

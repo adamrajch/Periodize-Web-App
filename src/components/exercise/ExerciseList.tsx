@@ -9,6 +9,7 @@ export default function ExerciseList() {
       utils.exercise.getAll.invalidate();
     },
   });
+
   return (
     <div>
       <h1>lifts</h1>

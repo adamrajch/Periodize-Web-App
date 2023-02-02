@@ -11,6 +11,7 @@ export const useProgramWizardForm = create<FormState>((set) => ({
     desc: "",
     category: ["bodybuilding"],
     weeks: [],
+    numWeeks: 12,
   },
   updateAction: (values) =>
     set((prev) => ({ form: { ...prev.form, ...values } })),

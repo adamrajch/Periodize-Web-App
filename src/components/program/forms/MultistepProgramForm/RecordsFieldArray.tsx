@@ -1,4 +1,4 @@
-import { ActionIcon, NativeSelect, SimpleGrid } from "@mantine/core";
+import { ActionIcon, Group, NativeSelect, Stack } from "@mantine/core";
 import { IconX } from "@tabler/icons";
 import type { Control } from "react-hook-form";
 import { Controller, useFieldArray } from "react-hook-form";
@@ -7,6 +7,7 @@ import type {
   SingleWorkoutType,
   WizardDaysFormType,
 } from "../../../../types/ProgramTypes";
+import WeekProgressionRecords from "./WeeklyProgressionRecords";
 
 type RecordsFieldArrayProps = {
   dayIndex: number;
@@ -15,6 +16,7 @@ type RecordsFieldArrayProps = {
   register: any;
   errors: any;
   workout: SingleWorkoutType;
+  getValues: unknown;
 };
 
 export default function RecordsFieldArray({
@@ -24,6 +26,7 @@ export default function RecordsFieldArray({
   errors,
   register,
   workout,
+  getValues,
 }: RecordsFieldArrayProps) {
   const { fields, remove, append } = useFieldArray({
     control,
@@ -32,67 +35,37 @@ export default function RecordsFieldArray({
   return (
     <div>
       {fields.map((record, rI) => (
-        <>
-          <SimpleGrid cols={5}>
+        <Stack key={record.id}>
+          <Group>
             <Controller
               control={control}
               name={`days.${dayIndex}.workouts.${workoutIndex}.records.${rI}.periodization`}
               render={({ field: { onChange, onBlur } }) => (
                 <NativeSelect
                   data={PROGRAM_PERIODIZATION_STYLES}
-                  label="Disciplines to be trained"
-                  placeholder="Pick all relative"
-                  onChange={onChange}
+                  label="Select Periodization"
+                  onChange={() => {
+                    onChange(), console.log("hello");
+                  }}
                   onBlur={onBlur}
                   error={errors.periodization?.message}
                 />
               )}
             />
-            {/* <HFTextInput
-              label="sets"
-              error={
-                errors.days?.[dayIndex]?.workouts?.[workoutIndex].records?.[rI]
-                  .sets
-              }
-              registerProps={register(
-                `days.${dayIndex}.workouts.${workoutIndex}.records.${rI}.sets`
-              )}
+
+            <WeekProgressionRecords
+              {...{ control, register, errors }}
+              workoutIndex={workoutIndex}
+              dayIndex={dayIndex}
+              recordIndex={rI}
+              workout={workout}
+              getValues={getValues}
             />
-            <HFTextInput
-              label="reps"
-              error={
-                errors.days?.[dayIndex]?.workouts?.[workoutIndex].records?.[rI]
-                  .reps
-              }
-              registerProps={register(
-                `days.${dayIndex}.workouts.${workoutIndex}.records.${rI}.reps`
-              )}
-            />
-            <HFTextInput
-              label="rpe"
-              error={
-                errors.days?.[dayIndex]?.workouts?.[workoutIndex].records?.[rI]
-                  .rpe
-              }
-              registerProps={register(
-                `days.${dayIndex}.workouts.${workoutIndex}.records.${rI}.rpe`
-              )}
-            />
-            <HFTextInput
-              label="percent"
-              error={
-                errors.days?.[dayIndex]?.workouts?.[workoutIndex].records?.[rI]
-                  .percent
-              }
-              registerProps={register(
-                `days.${dayIndex}.workouts.${workoutIndex}.records.${rI}.percent`
-              )}
-            /> */}
             <ActionIcon variant="filled" color="red" onClick={() => remove(rI)}>
               <IconX />
             </ActionIcon>
-          </SimpleGrid>
-        </>
+          </Group>
+        </Stack>
       ))}
     </div>
   );
