@@ -130,30 +130,29 @@ export const Week = z.object({
     .max(50, { message: "Must be 50 or fewer characters long" }),
   days: z.array(Day),
 });
-
+export const ProgramCategories = z.array(
+  z.union([
+    z.literal("bodybuilding"),
+    z.literal("powerlifting"),
+    z.literal("olympic weightlifting"),
+    z.literal("sport"),
+  ])
+);
+export type ProgramCategoriesType = z.infer<typeof ProgramCategories>;
 export const ProgramTemplateSchema = z.object({
   name: z
     .string()
     .trim()
     .min(1, { message: "Name is required" })
     .max(20, { message: "Must be 20 or fewer characters long" }),
-  desc: z
+  description: z
     .string()
     .trim()
     .min(1, { message: "Description is required" })
     .max(50, { message: "Must be 50 or fewer characters" }),
-  category: z
-    .array(
-      z.union([
-        z.literal("bodybuilding"),
-        z.literal("powerlifting"),
-        z.literal("olympic weightlifting"),
-        z.literal("sport"),
-      ])
-    )
-    .nonempty({
-      message: "Must chose atleast one discipline",
-    }),
+  categories: ProgramCategories.nonempty({
+    message: "Must chose atleast one discipline",
+  }),
   numWeeks: z.number().int().positive().lt(16),
   weeks: z.array(Week),
 });

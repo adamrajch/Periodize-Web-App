@@ -1,9 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, MultiSelect, NumberInput, Stack } from "@mantine/core";
-
 import { useRouter } from "next/router";
-// import NumberInput from "@ui/NumberInput";
-
 import { useCallback, useRef } from "react";
 import type { SubmitHandler } from "react-hook-form";
 import { Controller, useForm } from "react-hook-form";
@@ -19,11 +16,13 @@ export default function WizardDetailsForm() {
   const updateForm = useProgramWizardForm((state) => state.updateAction);
   const contextForm = useProgramWizardForm((state) => state.form);
   const utils = api.useContext();
-  const {
-    data: returnedProgram,
-    mutate,
-    isSuccess,
-  } = api.program.createProgram.useMutation();
+  const router = useRouter();
+
+  const programCreate = api.program.createProgram.useMutation({
+    onSuccess() {
+      router.push(`/dashboard/programs/${programCreate.data?.id}`);
+    },
+  });
   const {
     handleSubmit,
     register,
@@ -34,14 +33,13 @@ export default function WizardDetailsForm() {
   } = useForm<WizardDetailsFormType>({
     defaultValues: {
       name: contextForm.name,
-      desc: contextForm.desc,
-      category: contextForm.category,
+      description: contextForm.description,
+      categories: contextForm.categories,
       numWeeks: contextForm.numWeeks,
     },
     resolver: zodResolver(WizardDetailsSchema),
   });
 
-  const router = useRouter();
   const submitForm: SubmitHandler<WizardDetailsFormType> = useCallback(
     async (data: WizardDetailsFormType, e) => {
       e?.preventDefault();
@@ -49,21 +47,15 @@ export default function WizardDetailsForm() {
       updateForm({ ...data });
 
       try {
-        mutate({
+        programCreate.mutate({
           name: getValues("name"),
-          desc: getValues("desc"),
-          category: getValues("category"),
+          description: getValues("description"),
+          categories: getValues("categories"),
           numWeeks: getValues("numWeeks"),
         });
-
-        if (isSuccess) {
-          router.push(`/dashboard/programs/${returnedProgram.id} `);
-        }
       } catch (err) {
         console.log("errors: ", err);
       }
-
-      // router.push("/create/weeks");
     },
     [updateForm, router]
   );
@@ -83,12 +75,12 @@ export default function WizardDetailsForm() {
           />
           <HFTextarea
             label="Description"
-            error={errors.desc?.message}
-            registerProps={register("desc")}
+            error={errors.description?.message}
+            registerProps={register("description")}
           />
           <Controller
             control={control}
-            name="category"
+            name="categories"
             render={({ field: { onChange, onBlur } }) => (
               <MultiSelect
                 data={PROGRAM_CATEGORIES}
@@ -96,8 +88,8 @@ export default function WizardDetailsForm() {
                 placeholder="Pick all relative"
                 onChange={onChange}
                 onBlur={onBlur}
-                error={errors.category?.message}
-                value={getValues("category")}
+                error={errors.categories?.message}
+                value={getValues("categories")}
               />
             )}
           />
@@ -111,7 +103,7 @@ export default function WizardDetailsForm() {
                 withAsterisk
                 onChange={onChange}
                 onBlur={onBlur}
-                error={errors.category?.message}
+                error={errors.categories?.message}
                 value={getValues("numWeeks")}
                 max={24}
                 min={0}
