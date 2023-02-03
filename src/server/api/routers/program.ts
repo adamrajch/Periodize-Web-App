@@ -1,5 +1,8 @@
 import { z } from "zod";
-import { WizardDetailsSchema } from "../../../types/ProgramTypes";
+import {
+  WizardDetailsSchema,
+  WizardWeeksSchema,
+} from "../../../types/ProgramTypes";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
 
 export const programRouter = createTRPCRouter({
@@ -7,6 +10,13 @@ export const programRouter = createTRPCRouter({
     return ctx.prisma.program.findUnique({
       where: {
         id: input,
+      },
+    });
+  }),
+  getAllByAuthor: protectedProcedure.query(({ ctx }) => {
+    return ctx.prisma.program.findMany({
+      where: {
+        authorId: ctx.session.user.id,
       },
     });
   }),
@@ -23,7 +33,7 @@ export const programRouter = createTRPCRouter({
         },
       });
     }),
-  updateProgram: protectedProcedure
+  updateProgramDetails: protectedProcedure
     .input(
       z.object({
         id: z.string(),
@@ -43,6 +53,23 @@ export const programRouter = createTRPCRouter({
           name: input.schema.name,
           description: input.schema.description,
           categories: input.schema.categories,
+        },
+      });
+    }),
+  updateProgramTemplate: protectedProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        template: WizardWeeksSchema,
+      })
+    )
+    .mutation(({ ctx, input }) => {
+      return ctx.prisma.program.update({
+        where: {
+          id: input.id,
+        },
+        data: {
+          template: input.template,
         },
       });
     }),

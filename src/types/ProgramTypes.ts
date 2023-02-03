@@ -144,11 +144,10 @@ export const ProgramTemplateSchema = z.object({
     .string()
     .trim()
     .min(1, { message: "Name is required" })
-    .max(20, { message: "Must be 20 or fewer characters long" }),
+    .max(30, { message: "Must be 20 or fewer characters long" }),
   description: z
     .string()
     .trim()
-    .min(1, { message: "Description is required" })
     .max(50, { message: "Must be 50 or fewer characters" }),
   categories: ProgramCategories.nonempty({
     message: "Must chose atleast one discipline",
@@ -174,7 +173,7 @@ export const WizardDaysSchema = z.object({
 export type WizardDaysFormType = z.infer<typeof WizardDaysSchema>;
 
 export type WizardDetailsFormType = Omit<ProgramTemplateSchemaType, "weeks">;
-export type WizardWeeksFormType = Pick<ProgramTemplateSchemaType, "weeks">;
+export type WizardWeeksFormType = z.infer<typeof WizardWeeksSchema>;
 
 export type WeekType = z.infer<typeof Week>;
 export type DayType = z.infer<typeof Day>;

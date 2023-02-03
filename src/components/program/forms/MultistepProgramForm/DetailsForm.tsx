@@ -1,7 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, MultiSelect, NumberInput, Stack } from "@mantine/core";
 import { useRouter } from "next/router";
-import { useCallback, useRef } from "react";
+import { useCallback } from "react";
 import type { SubmitHandler } from "react-hook-form";
 import { Controller, useForm } from "react-hook-form";
 import { PROGRAM_CATEGORIES } from "../../../../constants/CreateProgram";
@@ -19,8 +19,9 @@ export default function WizardDetailsForm() {
   const router = useRouter();
 
   const programCreate = api.program.createProgram.useMutation({
-    onSuccess() {
-      router.push(`/dashboard/programs/${programCreate.data?.id}`);
+    onSettled(data) {
+      utils.program.getById.invalidate(data?.id);
+      router.push(`/dashboard/programs/${data?.id}`);
     },
   });
   const {
@@ -60,12 +61,8 @@ export default function WizardDetailsForm() {
     [updateForm, router]
   );
 
-  const renderCounter = useRef(0);
-  renderCounter.current = renderCounter.current + 1;
   return (
     <>
-      <h1>Renders: {renderCounter.current}</h1>
-
       <form onSubmit={handleSubmit(submitForm)}>
         <Stack>
           <HFTextInput
@@ -111,8 +108,7 @@ export default function WizardDetailsForm() {
               />
             )}
           />
-          <pre>{JSON.stringify(contextForm, null, 2)}</pre>
-          <pre>{JSON.stringify(errors)}</pre>
+
           <Button onClick={() => reset()}>Reset</Button>
           <Button
             variant="filled"

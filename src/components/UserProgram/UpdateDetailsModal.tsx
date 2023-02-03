@@ -19,7 +19,7 @@ import HFTextInput from "../ui/HFTexInput";
 import HFTextarea from "../ui/HFTextarea";
 
 type AddWorkoutModalProps = {
-  program: Program;
+  program: Program & { categories: any };
 };
 
 export default function UpdateDetailsModal({ program }: AddWorkoutModalProps) {
@@ -28,12 +28,10 @@ export default function UpdateDetailsModal({ program }: AddWorkoutModalProps) {
 
   const utils = api.useContext();
 
-  const programUpdate = api.program.updateProgram.useMutation({
-    onSuccess() {
-      setOpened(false);
-    },
-    onError(err) {
-      alert(err);
+  const programUpdate = api.program.updateProgramDetails.useMutation({
+    onSettled(data) {
+      utils.program.getById.invalidate(data?.id);
+      handleClose();
     },
   });
 
@@ -42,15 +40,15 @@ export default function UpdateDetailsModal({ program }: AddWorkoutModalProps) {
     register,
     control,
     getValues,
-    formState: { errors, isSubmitting, isValid },
+    reset,
+    formState: { errors, isSubmitting, isDirty },
   } = useForm<WizardDetailsFormType>({
     defaultValues: {
       name: program.name,
       description: program.description ?? "",
       categories: program.categories,
-      numWeeks: program.numWeeks,
     },
-    resolver: zodResolver(WizardDetailsSchema),
+    resolver: zodResolver(WizardDetailsSchema.omit({ numWeeks: true })),
   });
 
   const submitForm: SubmitHandler<WizardDetailsFormType> = useCallback(
@@ -60,9 +58,9 @@ export default function UpdateDetailsModal({ program }: AddWorkoutModalProps) {
         programUpdate.mutate({
           id: program.id,
           schema: {
-            name: getValues("name"),
-            description: getValues("description"),
-            categories: getValues("categories"),
+            name: data.name,
+            description: data.description,
+            categories: data.categories,
           },
         });
       } catch (err) {
@@ -72,11 +70,17 @@ export default function UpdateDetailsModal({ program }: AddWorkoutModalProps) {
     []
   );
 
+  function handleClose() {
+    reset((formValues) => ({
+      ...formValues,
+    }));
+    setOpened(false);
+  }
   return (
     <>
       <Modal
         opened={opened}
-        onClose={() => setOpened(false)}
+        onClose={handleClose}
         withCloseButton={false}
         centered
         overlayColor={
@@ -121,7 +125,7 @@ export default function UpdateDetailsModal({ program }: AddWorkoutModalProps) {
             <Button
               variant="filled"
               loading={isSubmitting}
-              disabled={!isValid}
+              disabled={!isDirty}
               type="submit"
             >
               Submit

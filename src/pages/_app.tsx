@@ -8,6 +8,7 @@ import { SessionProvider } from "next-auth/react";
 import type { AppContext, AppProps } from "next/app";
 import NextApp from "next/app";
 import { useEffect, useState } from "react";
+import GlobalStyles from "../styles/GlobalStyles";
 import { api } from "../utils/api";
 
 const MyApp = (props: AppProps & { color: ColorScheme }) => {
@@ -41,6 +42,7 @@ const MyApp = (props: AppProps & { color: ColorScheme }) => {
             primaryColor: "teal",
           }}
         >
+          <GlobalStyles />
           <NotificationsProvider>
             <ModalsProvider>
               <Component {...pageProps} />

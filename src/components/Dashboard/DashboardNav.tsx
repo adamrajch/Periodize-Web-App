@@ -84,10 +84,10 @@ const mockdata = [
   { icon: IconGauge, label: "Dashboard", href: "/dashboard" },
   {
     icon: IconDeviceDesktopAnalytics,
-    label: "Analytics",
-    href: "/dashboard/analytics",
+    label: "Programs",
+    href: "/dashboard/programs",
   },
-  { icon: IconCalendarStats, label: "Releases", href: "/dashboard/programs" },
+  { icon: IconCalendarStats, label: "Releases", href: "/dashboard/calendar" },
   { icon: IconUser, label: "Account", href: "/dashboard/workouts" },
   { icon: IconSettings, label: "Settings", href: "/settings" },
 ];

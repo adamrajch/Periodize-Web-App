@@ -25,6 +25,10 @@ export default function GlobalStyles() {
         "#your-id > [data-active]": {
           backgroundColor: "pink",
         },
+        a: {
+          textDecoration: "none",
+          color: "inherit",
+        },
       })}
     />
   );
