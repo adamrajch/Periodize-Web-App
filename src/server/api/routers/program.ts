@@ -29,7 +29,51 @@ export const programRouter = createTRPCRouter({
           name: input.name,
           categories: input.categories,
           numWeeks: input.numWeeks,
-          template: {},
+          template: {
+            weeks: [
+              {
+                name: "Week 1",
+                summary: "",
+                days: [
+                  {
+                    name: "sunday",
+                    summary: "",
+                    workouts: [],
+                  },
+                  {
+                    name: "monday",
+                    summary: "",
+                    workouts: [],
+                  },
+                  {
+                    name: "tuesday",
+                    summary: "",
+                    workouts: [],
+                  },
+                  {
+                    name: "wednesday",
+                    summary: "",
+                    workouts: [],
+                  },
+                  {
+                    name: "thursday",
+                    summary: "",
+                    workouts: [],
+                  },
+                  {
+                    name: "friday",
+                    summary: "",
+                    workouts: [],
+                  },
+                  {
+                    name: "saturday",
+                    summary: "",
+                    workouts: [],
+                  },
+                ],
+              },
+            ],
+          },
         },
       });
     }),

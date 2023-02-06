@@ -19,7 +19,7 @@ type InputProps = TextareaProps & {
     disabled?: boolean;
   };
 };
-export default function HFTextInput({
+export default function HFTextArea({
   error,
 
   registerProps,
