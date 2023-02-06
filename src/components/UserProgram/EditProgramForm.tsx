@@ -24,10 +24,11 @@ export default function EditProgramForm({ id, template }: Props) {
     reset,
     control,
     getValues,
+    watch,
     formState: { errors, isSubmitting, isValid },
   } = useForm<WizardWeeksFormType>({
     defaultValues: {
-      weeks: template,
+      weeks: template?.weeks ? template.weeks : [],
     },
     resolver: zodResolver(WizardWeeksSchema),
   });
@@ -38,11 +39,17 @@ export default function EditProgramForm({ id, template }: Props) {
 
       programUpdate.mutate({
         id: id,
-        template: data.weeks,
+        template: { weeks: data.weeks },
       });
     },
     []
   );
 
-  return <div>EditProgramForm</div>;
+  return (
+    <div>
+      EditProgramForm
+      <pre>{JSON.stringify(template, null, 2)}</pre>
+      <pre>{JSON.stringify(watch(), null, 2)}</pre>
+    </div>
+  );
 }

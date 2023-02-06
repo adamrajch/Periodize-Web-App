@@ -1,6 +1,7 @@
 import { Group, Title } from "@mantine/core";
 import { useRouter } from "next/router";
 import DashboardShell from "../../../components/Dashboard";
+import EditProgramForm from "../../../components/UserProgram/EditProgramForm";
 import UpdateDetailsModal from "../../../components/UserProgram/UpdateDetailsModal";
 import { api } from "../../../utils/api";
 
@@ -19,7 +20,7 @@ export default function UserProgramById() {
             <Title>{data.name}</Title> <UpdateDetailsModal program={data} />
           </Group>
           <div>Updated: {data.updatedAt.toDateString()}</div>
-          <EditProgramForm program={data.template as WizardWeeksSchemaType} />
+          <EditProgramForm id={data.id} template={data.template} />
         </>
       )}
     </DashboardShell>

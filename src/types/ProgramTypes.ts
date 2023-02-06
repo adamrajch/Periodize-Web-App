@@ -99,16 +99,6 @@ export const Workout = z.discriminatedUnion("type", [
   ClusterWorkout,
 ]);
 
-// export const Day = z.object({
-//   name: z
-//     .string()
-//     .min(1, { message: "Required" })
-//     .max(20, { message: "Must be 20 or fewer characters long" }),
-//   summary: z
-//     .string()
-//     .max(50, { message: "Must be 50 or fewer characters long" }),
-//   workouts: z.array(Workout),
-// });
 export const Day = z.object({
   name: z
     .string()
@@ -130,6 +120,7 @@ export const Week = z.object({
     .max(50, { message: "Must be 50 or fewer characters long" }),
   days: z.array(Day),
 });
+
 export const ProgramCategories = z.array(
   z.union([
     z.literal("bodybuilding"),
@@ -138,7 +129,9 @@ export const ProgramCategories = z.array(
     z.literal("sport"),
   ])
 );
+
 export type ProgramCategoriesType = z.infer<typeof ProgramCategories>;
+
 export const ProgramTemplateSchema = z.object({
   name: z
     .string()
@@ -155,11 +148,13 @@ export const ProgramTemplateSchema = z.object({
   numWeeks: z.number().int().positive().lt(16),
   weeks: z.array(Week),
 });
+
 export type ProgramTemplateSchemaType = z.infer<typeof ProgramTemplateSchema>;
 
 export const WizardDetailsSchema = ProgramTemplateSchema.omit({
   weeks: true,
 });
+
 export const WizardWeeksSchema = ProgramTemplateSchema.pick({
   weeks: true,
 });
