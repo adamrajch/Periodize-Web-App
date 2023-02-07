@@ -10,7 +10,6 @@ import {
 import { useCallback } from "react";
 import type { SubmitHandler } from "react-hook-form";
 import { useFieldArray, useForm } from "react-hook-form";
-import { DAYS_OF_WEEK } from "../../constants/CreateProgram";
 import { useEditProgramStore } from "../../lib/slices/editProgramStore";
 
 import type { WizardWeeksFormType } from "../../types/ProgramTypes";
@@ -153,27 +152,13 @@ export default function EditProgramForm({ id, template }: Props) {
                   </Menu>
                 </Group>
 
-                <Tabs
-                  value={`${dayIndex}`}
-                  onTabChange={(val) => setDayIndex(val ? parseInt(val) : 0)}
-                  my="xl"
-                >
-                  <Tabs.List grow position="center">
-                    {DAYS_OF_WEEK.map((day, dI) => (
-                      <Tabs.Tab key={day} value={`${dI}`}>
-                        {DAYS_OF_WEEK[dI]}
-                      </Tabs.Tab>
-                    ))}
-                  </Tabs.List>
-
-                  <DaySection
-                    control={control}
-                    register={register}
-                    setValue={setValue}
-                    getValues={getValues}
-                    errors={errors}
-                  />
-                </Tabs>
+                <DaySection
+                  control={control}
+                  register={register}
+                  setValue={setValue}
+                  getValues={getValues}
+                  errors={errors}
+                />
               </Box>
             </Tabs.Panel>
           ))}

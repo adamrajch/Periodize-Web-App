@@ -1,8 +1,7 @@
-import type { Control } from "react-hook-form";
+import { Group, Text } from "@mantine/core";
 import { useFieldArray } from "react-hook-form";
 import { useEditProgramStore } from "../../lib/slices/editProgramStore";
-import type { WizardWeeksFormType } from "../../types/ProgramTypes";
-import HFTextInput from "../ui/HFTexInput";
+import type { EditFormSectionProps } from "./DaySection";
 import RecordSection from "./RecordSection";
 
 export default function WorkoutSection({
@@ -10,12 +9,7 @@ export default function WorkoutSection({
   register,
   getValues,
   errors,
-}: {
-  control: Control<WizardWeeksFormType>;
-  register: any;
-  getValues: any;
-  errors: any;
-}) {
+}: Omit<EditFormSectionProps, "setValue">) {
   const { weekIndex, dayIndex } = useEditProgramStore();
   const { fields } = useFieldArray({
     control,
@@ -27,21 +21,24 @@ export default function WorkoutSection({
       {fields.map((workout, wI) => {
         if (workout.type === "single") {
           return (
-            <div key={workout.id}>
-              <HFTextInput
-                label="Exercise"
-                disabled
-                value={getValues(
+            <Group align="flex-start" key={workout.id}>
+              <Text fw={500} fz="lg" tt="capitalize">
+                {getValues(
                   `weeks.${weekIndex}.days.${dayIndex}.workouts.${wI}.name`
                 )}
-              />
-              <RecordSection
-                getValues={getValues}
-                control={control}
-                register={register}
-                errors={errors}
-              />
-            </div>
+              </Text>
+              {getValues(
+                `weeks.${weekIndex}.days.${dayIndex}.workouts.${wI}.records`
+              ) ? (
+                <RecordSection
+                  getValues={getValues}
+                  control={control}
+                  register={register}
+                  errors={errors}
+                  exerciseId={workout.exerciseId}
+                />
+              ) : null}
+            </Group>
           );
         } else {
           return <div key={workout.id}>Cluster Workout</div>;

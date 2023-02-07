@@ -21,7 +21,7 @@ export const RecordSchema = z.object({
     .min(1, { message: "Must be between 1-100" })
     .max(100, { message: "Must be between 1-100" })
     .optional(),
-  liftId: z.string().min(1),
+  exerciseId: z.string().min(1),
 });
 
 export type RecordSchemaType = z.infer<typeof RecordSchema>;
@@ -60,24 +60,7 @@ export const SingleWorkout = z.object({
     .min(1, { message: "Minimum 1 set" })
     .max(20, { message: "Must be 20 or fewer characters long" }),
   type: z.literal("single"),
-  records: z.array(
-    z.object({
-      periodization: z.enum([
-        "none",
-        "linear",
-        "undulating",
-        "block",
-        "step",
-        "custom",
-      ]),
-      weekProgression: z.array(
-        z.discriminatedUnion("status", [
-          SingleRecord,
-          z.object({ status: z.literal("empty") }),
-        ])
-      ),
-    })
-  ),
+  records: z.array(RecordSchema),
 });
 
 export type SingleWorkoutType = z.infer<typeof SingleWorkout>;

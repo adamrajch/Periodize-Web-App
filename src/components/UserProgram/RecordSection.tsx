@@ -1,40 +1,36 @@
 import { ActionIcon, Group } from "@mantine/core";
 import { IconPlus, IconX } from "@tabler/icons";
-import type { Control } from "react-hook-form";
 import { useFieldArray } from "react-hook-form";
 import { useEditProgramStore } from "../../lib/slices/editProgramStore";
-import type { WizardWeeksFormType } from "../../types/ProgramTypes";
 import HFNumberInput from "../ui/HFNumberInput";
+import type { EditFormSectionProps } from "./DaySection";
 
 export default function RecordSection({
   control,
-  register,
   getValues,
   errors,
-}: {
-  control: Control<WizardWeeksFormType>;
-  register: any;
-  getValues: any;
-  errors: any;
-}) {
+  exerciseId,
+}: Omit<EditFormSectionProps, "setValue"> & { exerciseId: string }) {
   const { weekIndex, dayIndex, workoutIndex } = useEditProgramStore();
   const { fields, remove, append } = useFieldArray({
     control,
     name: `weeks.${weekIndex}.days.${dayIndex}.workouts.${workoutIndex}.records` as const,
   });
 
+  // let err = errors.weeks?.[weekIndex]?.days?.[dayIndex]?.workouts?.[workoutIndex]?.records?.
   return (
-    <>
+    <div>
       {fields.map((record, rI) => (
         <Group key={record.id}>
           <HFNumberInput
             label="sets"
-            error={
-              errors.days?.[dayIndex]?.workouts?.[workoutIndex].records?.[rI]
-                .sets
-            }
-            fieldName={`days.${dayIndex}.workouts.${workoutIndex}.records.${rI}.sets`}
             control={control}
+            error={
+              errors.weeks?.[weekIndex]?.days?.[dayIndex]?.workouts?.[
+                workoutIndex
+              ]?.records?.[rI]?.sets.message
+            }
+            fieldName={`weeks.${weekIndex}.days.${dayIndex}.workouts.${workoutIndex}.records.${rI}.sets`}
             value={getValues(
               `weeks.${weekIndex}.days.${dayIndex}.workouts.${workoutIndex}.records.${rI}.sets`
             )}
@@ -44,10 +40,11 @@ export default function RecordSection({
           <HFNumberInput
             label="reps"
             error={
-              errors.days?.[dayIndex]?.workouts?.[workoutIndex].records?.[rI]
-                .weekProgression?.[rI].reps
+              errors.weeks?.[weekIndex]?.days?.[dayIndex]?.workouts?.[
+                workoutIndex
+              ]?.records?.[rI].reps
             }
-            fieldName={`days.${dayIndex}.workouts.${workoutIndex}.records.${rI}.reps`}
+            fieldName={`weeks.${weekIndex}.days.${dayIndex}.workouts.${workoutIndex}.records.${rI}.reps`}
             control={control}
             value={getValues(
               `weeks.${weekIndex}.days.${dayIndex}.workouts.${workoutIndex}.records.${rI}.reps`
@@ -59,10 +56,11 @@ export default function RecordSection({
           <HFNumberInput
             label="rpe"
             error={
-              errors.days?.[dayIndex]?.workouts?.[workoutIndex].records?.[rI]
-                .weekProgression?.[rI].rpe
+              errors.weeks?.[weekIndex]?.days?.[dayIndex]?.workouts?.[
+                workoutIndex
+              ]?.records?.[rI].rpe
             }
-            fieldName={`days.${dayIndex}.workouts.${workoutIndex}.records.${rI}.rpe`}
+            fieldName={`weeks.${weekIndex}.days.${dayIndex}.workouts.${workoutIndex}.records.${rI}.rpe`}
             control={control}
             value={getValues(
               `weeks.${weekIndex}.days.${dayIndex}.workouts.${workoutIndex}.records.${rI}.rpe`
@@ -73,10 +71,11 @@ export default function RecordSection({
           <HFNumberInput
             label="percent"
             error={
-              errors.days?.[dayIndex]?.workouts?.[workoutIndex].records?.[rI]
-                .weekProgression?.[rI].percent
+              errors.weeks?.[weekIndex]?.days?.[dayIndex]?.workouts?.[
+                workoutIndex
+              ]?.records?.[rI].percent
             }
-            fieldName={`days.${dayIndex}.workouts.${workoutIndex}.records.${rI}.percent`}
+            fieldName={`weeks.${weekIndex}.days.${dayIndex}.workouts.${workoutIndex}.records.${rI}.percent`}
             control={control}
             value={getValues(
               `weeks.${weekIndex}.days.${dayIndex}.workouts.${workoutIndex}.records.${rI}.percent`
@@ -97,6 +96,7 @@ export default function RecordSection({
                 reps: 5,
                 percent: undefined,
                 rpe: undefined,
+                exerciseId: exerciseId,
               })
             }
           >
@@ -104,6 +104,6 @@ export default function RecordSection({
           </ActionIcon>
         </Group>
       ))}
-    </>
+    </div>
   );
 }

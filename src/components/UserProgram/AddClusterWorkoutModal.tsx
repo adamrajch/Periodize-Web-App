@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button, Group, Modal, Stack, useMantineTheme } from "@mantine/core";
+import { Button, Group, Modal, useMantineTheme } from "@mantine/core";
 import type { Exercise } from "@prisma/client";
 import { IconPlus } from "@tabler/icons";
 import { useState } from "react";
@@ -21,7 +21,8 @@ const WorkoutFormSchema = z.object({
 });
 
 type WorkoutFormType = z.infer<typeof WorkoutFormSchema>;
-export default function AddWorkoutModal({
+
+export default function AddClusterWorkoutModal({
   addSingleWorkout,
 }: AddWorkoutModalProps) {
   const [opened, setOpened] = useState(false);
@@ -61,14 +62,16 @@ export default function AddWorkoutModal({
         transitionDuration={200}
         transitionTimingFunction="ease"
       >
-        <HFTextInput
-          label="Search Lifts"
-          placeholder="Squat"
-          defaultValue={query}
-          onChange={(event) => setQuery(event.currentTarget.value)}
-        />
+        <Group>
+          <HFTextInput
+            label="Search Lifts"
+            placeholder="Squat"
+            defaultValue={query}
+            onChange={(event) => setQuery(event.currentTarget.value)}
+          />
+        </Group>
 
-        <Stack my="sm" spacing={0}>
+        <div>
           {recordList?.map((exercise: Exercise) => (
             <Button
               key={exercise.id}
@@ -80,14 +83,11 @@ export default function AddWorkoutModal({
                   resetQuery(),
                   setOpened(false);
               }}
-              fullWidth
-              radius={0}
-              variant="outline"
             >
               {exercise.name}
             </Button>
           ))}
-        </Stack>
+        </div>
       </Modal>
 
       <Group position="center">
