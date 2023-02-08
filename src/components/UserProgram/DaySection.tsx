@@ -40,26 +40,24 @@ export default function DaySection({
     name: `weeks.${weekIndex}.days` as const,
   });
 
-  function addSingleWorkout(
-    exercise: Pick<SingleWorkoutType, "exerciseId" | "name">
+  // TODO: FIX THIS FUNCTION
+  function addWorkouts(
+    exercises: Pick<SingleWorkoutType, "exerciseId" | "name">[]
   ) {
-    setValue(`weeks.${weekIndex}.days.${dayIndex}.workouts`, [
-      ...getValues(`weeks.${weekIndex}.days.${dayIndex}.workouts`),
-      {
-        ...exercise,
-        type: "single",
-        records: [
-          {
-            sets: 5,
-            reps: 5,
-            rpe: undefined,
-            percent: undefined,
-            exerciseId: exercise.exerciseId,
-          },
-        ],
-      },
-    ]);
+    if (exercises.length > 1) {
+      setValue(`weeks.${weekIndex}.days.${dayIndex}.workouts`, [
+        ...getValues(`weeks.${weekIndex}.days.${dayIndex}.workouts`),
+
+        {
+          type: "cluster",
+          name: "",
+          summary: "",
+          lifts: exercises,
+        },
+      ]);
+    }
   }
+
   return (
     <Tabs
       value={`${dayIndex}`}
@@ -86,7 +84,7 @@ export default function DaySection({
                 )}
               />
               <AddWorkoutModal
-                addSingleWorkout={addSingleWorkout}
+                addWorkouts={addWorkouts}
                 // getValues={getValues}
               />
             </Group>

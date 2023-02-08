@@ -24,8 +24,7 @@ type Props = {
 };
 
 export default function EditProgramForm({ id, template }: Props) {
-  const { weekIndex, dayIndex, setWeekIndex, setDayIndex } =
-    useEditProgramStore();
+  const { weekIndex, setWeekIndex } = useEditProgramStore();
   const utils = api.useContext();
   const programUpdate = api.program.updateProgramTemplate.useMutation({
     onSettled() {
@@ -41,7 +40,7 @@ export default function EditProgramForm({ id, template }: Props) {
     getValues,
     watch,
     setValue,
-    formState: { errors, isSubmitting, isValid, isDirty },
+    formState: { errors, isSubmitting, isDirty },
   } = useForm<WizardWeeksFormType>({
     defaultValues: {
       weeks: template?.weeks ? template.weeks : [],
@@ -63,7 +62,7 @@ export default function EditProgramForm({ id, template }: Props) {
         template: { weeks: data.weeks },
       });
     },
-    []
+    [id, programUpdate]
   );
 
   function deleteWeek(index: number) {
@@ -164,7 +163,7 @@ export default function EditProgramForm({ id, template }: Props) {
           ))}
         </Tabs>
 
-        <Button type="submit" disabled={!isDirty}>
+        <Button type="submit" disabled={!isDirty} loading={isSubmitting}>
           Save
         </Button>
 

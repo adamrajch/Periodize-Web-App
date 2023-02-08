@@ -1,53 +1,70 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button, Group, Modal, Stack, useMantineTheme } from "@mantine/core";
+import {
+  ActionIcon,
+  Button,
+  Group,
+  Modal,
+  Stack,
+  Text,
+  useMantineTheme,
+} from "@mantine/core";
 import type { Exercise } from "@prisma/client";
-import { IconPlus } from "@tabler/icons";
+import { IconPlus, IconX } from "@tabler/icons";
 import { useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { z } from "zod";
 import useSearchExercises from "../../hooks/useSearchExercises";
 import type { SingleWorkoutType } from "../../types/ProgramTypes";
-import { RecordSchema } from "../../types/ProgramTypes";
 import HFTextInput from "../ui/HFTexInput";
 
 type AddWorkoutModalProps = {
-  addSingleWorkout: (
-    exercise: Pick<SingleWorkoutType, "exerciseId" | "name">
+  addWorkouts: (
+    exercise: Pick<SingleWorkoutType, "exerciseId" | "name">[]
   ) => void;
 };
 
 const WorkoutFormSchema = z.object({
-  records: z.array(RecordSchema),
+  exercises: z.array(
+    z.object({
+      id: z.string(),
+      name: z.string(),
+      load: z.boolean(),
+      distance: z.boolean(),
+      time: z.boolean(),
+      categories: z.array(z.string()),
+    })
+  ),
 });
 
 type WorkoutFormType = z.infer<typeof WorkoutFormSchema>;
-export default function AddWorkoutModal({
-  addSingleWorkout,
-}: AddWorkoutModalProps) {
+export default function AddWorkoutModal({ addWorkouts }: AddWorkoutModalProps) {
   const [opened, setOpened] = useState(false);
   const theme = useMantineTheme();
   const { query, recordList, setQuery, resetQuery } = useSearchExercises();
 
-  const {
-    control,
-    formState: { errors },
-  } = useForm<WorkoutFormType>({
+  const { control, reset, watch } = useForm<WorkoutFormType>({
     defaultValues: {
-      records: [],
+      exercises: [],
     },
     resolver: zodResolver(WorkoutFormSchema),
   });
 
   const { fields, remove, append } = useFieldArray({
     control,
-    name: "records",
+    name: "exercises",
   });
+
+  function handleClose() {
+    setOpened(false);
+    resetQuery();
+    reset();
+  }
 
   return (
     <>
       <Modal
         opened={opened}
-        onClose={() => setOpened(false)}
+        onClose={() => handleClose()}
         withCloseButton={false}
         centered
         overlayColor={
@@ -64,21 +81,26 @@ export default function AddWorkoutModal({
         <HFTextInput
           label="Search Lifts"
           placeholder="Squat"
-          defaultValue={query}
+          value={query}
           onChange={(event) => setQuery(event.currentTarget.value)}
         />
 
-        <Stack my="sm" spacing={0}>
+        <Stack mt="sm" spacing={0}>
           {recordList?.map((exercise: Exercise) => (
             <Button
               key={exercise.id}
               onClick={() => {
-                addSingleWorkout({
-                  exerciseId: exercise.id,
-                  name: exercise.name,
-                }),
-                  resetQuery(),
-                  setOpened(false);
+                // addSingleWorkout({
+                //   exerciseId: exercise.id,
+                //   name: exercise.name,
+                // }),
+
+                //   setOpened(false);
+                append({
+                  ...exercise,
+                });
+                resetQuery();
+                setQuery("");
               }}
               fullWidth
               radius={0}
@@ -88,6 +110,26 @@ export default function AddWorkoutModal({
             </Button>
           ))}
         </Stack>
+        <Stack my="sm" spacing={4}>
+          {fields.map((e, ei) => (
+            <Group key={e.id} sx={{ border: "1px solid white" }} grow>
+              <Text
+                align="center"
+                size={fields.length > 1 ? "sm" : "lg"}
+                tt="capitalize"
+              >
+                {`${ei + 1} ${e.name}`}
+              </Text>
+              <ActionIcon variant="transparent" onClick={() => remove(ei)}>
+                <IconX />
+              </ActionIcon>
+            </Group>
+          ))}
+          <pre>{JSON.stringify(watch(), null, 2)}</pre>
+        </Stack>
+
+        {fields.length === 1 && <Button fullWidth>Add Single Lift</Button>}
+        {fields.length > 1 && <Button fullWidth>Add Superset</Button>}
       </Modal>
 
       <Group position="center">
