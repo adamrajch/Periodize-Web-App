@@ -25,6 +25,5 @@ export default function HFTextInput({
   registerProps,
   ...rest
 }: InputProps) {
-  console.log("my error: ", error);
   return <TextInput error={error ?? ""} {...(registerProps ?? {})} {...rest} />;
 }

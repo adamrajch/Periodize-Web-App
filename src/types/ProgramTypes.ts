@@ -60,6 +60,9 @@ export const SingleWorkout = z.object({
     .min(1, { message: "Minimum 1 set" })
     .max(20, { message: "Must be 20 or fewer characters long" }),
   type: z.literal("single"),
+  load: z.boolean(),
+  distance: z.boolean(),
+  time: z.boolean(),
   records: z.array(RecordSchema),
 });
 
@@ -74,13 +77,18 @@ export const ClusterWorkout = z.object({
   summary: z
     .string()
     .max(50, { message: "Must be 50 or fewer characters long" }),
-  lifts: z.array(SingleWorkout),
+  exercises: z.array(SingleWorkout),
+  interval: z.number().optional(),
 });
+
+export type ClusterWorkoutType = z.infer<typeof ClusterWorkout>;
 
 export const Workout = z.discriminatedUnion("type", [
   SingleWorkout,
   ClusterWorkout,
 ]);
+
+export type WorkoutType = z.infer<typeof Workout>;
 
 export const Day = z.object({
   name: z

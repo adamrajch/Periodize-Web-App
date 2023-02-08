@@ -10,14 +10,25 @@ export default function RecordSection({
   getValues,
   errors,
   exerciseId,
-}: Omit<EditFormSectionProps, "setValue"> & { exerciseId: string }) {
+  clusterIndex,
+  exerciseIndex,
+}: Omit<EditFormSectionProps, "setValue"> & {
+  exerciseId: string;
+  clusterIndex?: number;
+  exerciseIndex?: number;
+}) {
   const { weekIndex, dayIndex, workoutIndex } = useEditProgramStore();
   const { fields, remove, append } = useFieldArray({
     control,
-    name: `weeks.${weekIndex}.days.${dayIndex}.workouts.${workoutIndex}.records` as const,
+    name: clusterIndex
+      ? (`weeks.${weekIndex}.days.${dayIndex}.workouts.${clusterIndex}.exercises.${exerciseIndex}.records` as const)
+      : (`weeks.${weekIndex}.days.${dayIndex}.workouts.${workoutIndex}.records` as const),
   });
+  const path =
+    typeof clusterIndex === "number"
+      ? `weeks.${weekIndex}.days.${dayIndex}.workouts.${clusterIndex}.exercises.${exerciseIndex}.records`
+      : `weeks.${weekIndex}.days.${dayIndex}.workouts.${workoutIndex}.records`;
 
-  // let err = errors.weeks?.[weekIndex]?.days?.[dayIndex]?.workouts?.[workoutIndex]?.records?.
   return (
     <div>
       {fields.map((record, rI) => (
@@ -31,9 +42,7 @@ export default function RecordSection({
               ]?.records?.[rI]?.sets.message
             }
             fieldName={`weeks.${weekIndex}.days.${dayIndex}.workouts.${workoutIndex}.records.${rI}.sets`}
-            value={getValues(
-              `weeks.${weekIndex}.days.${dayIndex}.workouts.${workoutIndex}.records.${rI}.sets`
-            )}
+            value={getValues(path + `.${rI}.sets`)}
             min={1}
             step={1}
           />

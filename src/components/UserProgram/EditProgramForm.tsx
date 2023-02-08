@@ -24,7 +24,7 @@ type Props = {
 };
 
 export default function EditProgramForm({ id, template }: Props) {
-  const { weekIndex, setWeekIndex } = useEditProgramStore();
+  const { weekIndex, setWeekIndex, dayIndex } = useEditProgramStore();
   const utils = api.useContext();
   const programUpdate = api.program.updateProgramTemplate.useMutation({
     onSettled() {
@@ -56,7 +56,7 @@ export default function EditProgramForm({ id, template }: Props) {
   const submitForm: SubmitHandler<WizardWeeksFormType> = useCallback(
     async (data: WizardWeeksFormType, e) => {
       e?.preventDefault();
-
+      console.log("submitting edit form");
       programUpdate.mutate({
         id: id,
         template: { weeks: data.weeks },
@@ -94,7 +94,8 @@ export default function EditProgramForm({ id, template }: Props) {
   }
   return (
     <>
-      <form onSubmit={handleSubmit(submitForm)}>
+      <form onSubmit={handleSubmit(submitForm)} id="editForm">
+        <pre>{`${weekIndex} ${dayIndex}`}</pre>
         <Tabs
           value={`${weekIndex}`}
           onTabChange={(val) => setWeekIndex(val ? parseInt(val) : 0)}
@@ -118,7 +119,7 @@ export default function EditProgramForm({ id, template }: Props) {
               <Box ml="xl">
                 <Group position="center">
                   <HFTextInput
-                    registerProps={register(`weeks.${wI}.name`)}
+                    registerProps={register(`weeks.${wI}.name` as const)}
                     label={`Week ${wI + 1}`}
                     placeholder="Week Name"
                     error={errors.weeks?.[wI]?.name?.message}
@@ -163,7 +164,12 @@ export default function EditProgramForm({ id, template }: Props) {
           ))}
         </Tabs>
 
-        <Button type="submit" disabled={!isDirty} loading={isSubmitting}>
+        <Button
+          type="submit"
+          disabled={!isDirty}
+          loading={isSubmitting}
+          form="editForm"
+        >
           Save
         </Button>
 

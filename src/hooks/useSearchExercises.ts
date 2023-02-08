@@ -6,7 +6,7 @@ export default function useSearchExercises() {
 
   const { data } = api.exercise.searchUserAndPublicExercises.useQuery(
     {
-      query: query,
+      query: query.trim(),
     },
     {
       enabled: query.length > 2,
@@ -19,7 +19,7 @@ export default function useSearchExercises() {
 
   return {
     query,
-    recordList: data,
+    recordList: data ?? [],
     setQuery,
     resetQuery,
   };

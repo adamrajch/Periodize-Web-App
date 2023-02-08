@@ -10,8 +10,8 @@ import { useFieldArray } from "react-hook-form";
 import { DAYS_OF_WEEK } from "../../constants/CreateProgram";
 import { useEditProgramStore } from "../../lib/slices/editProgramStore";
 import type {
-  SingleWorkoutType,
   WizardWeeksFormType,
+  WorkoutType,
 } from "../../types/ProgramTypes";
 
 import HFTextInput from "../ui/HFTexInput";
@@ -35,27 +35,17 @@ export default function DaySection({
 }: EditFormSectionProps) {
   const { weekIndex, dayIndex, setDayIndex } = useEditProgramStore();
 
-  const { fields, append } = useFieldArray({
+  const { fields } = useFieldArray({
     control,
-    name: `weeks.${weekIndex}.days` as const,
+    name: `weeks.${weekIndex}.days` as `weeks.${weekIndex}.days`,
   });
 
-  // TODO: FIX THIS FUNCTION
-  function addWorkouts(
-    exercises: Pick<SingleWorkoutType, "exerciseId" | "name">[]
-  ) {
-    if (exercises.length > 1) {
-      setValue(`weeks.${weekIndex}.days.${dayIndex}.workouts`, [
-        ...getValues(`weeks.${weekIndex}.days.${dayIndex}.workouts`),
+  function addWorkouts(exercise: WorkoutType) {
+    setValue(`weeks.${weekIndex}.days.${dayIndex}.workouts`, [
+      ...getValues(`weeks.${weekIndex}.days.${dayIndex}.workouts`),
 
-        {
-          type: "cluster",
-          name: "",
-          summary: "",
-          lifts: exercises,
-        },
-      ]);
-    }
+      exercise,
+    ]);
   }
 
   return (
@@ -80,7 +70,7 @@ export default function DaySection({
                 placeholder="Day Name"
                 label="Day Name"
                 registerProps={register(
-                  `weeks.${weekIndex}.days.${dayIndex}.name`
+                  `weeks.${weekIndex}.days.${dayIndex}.name` as const
                 )}
               />
               <AddWorkoutModal

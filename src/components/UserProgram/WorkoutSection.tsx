@@ -1,8 +1,12 @@
-import { Group, Text } from "@mantine/core";
 import { useFieldArray } from "react-hook-form";
 import { useEditProgramStore } from "../../lib/slices/editProgramStore";
+import type {
+  ClusterWorkoutType,
+  SingleWorkoutType,
+} from "../../types/ProgramTypes";
+import ClusterSection from "./ClusterSection";
 import type { EditFormSectionProps } from "./DaySection";
-import RecordSection from "./RecordSection";
+import SingleWorkoutSection from "./SingleWorkoutSection";
 
 export default function WorkoutSection({
   control,
@@ -11,39 +15,50 @@ export default function WorkoutSection({
   errors,
 }: Omit<EditFormSectionProps, "setValue">) {
   const { weekIndex, dayIndex } = useEditProgramStore();
-  const { fields } = useFieldArray({
+  const { fields, remove } = useFieldArray({
     control,
-    name: `weeks.${weekIndex}.days.${dayIndex}.workouts` as const,
+    name: `weeks.${weekIndex}.days.${dayIndex}.workouts` as `weeks.${weekIndex}.days.${dayIndex}.workouts`,
   });
 
   return (
-    <>
-      {fields.map((workout, wI) => {
-        if (workout.type === "single") {
-          return (
-            <Group align="flex-start" key={workout.id}>
-              <Text fw={500} fz="lg" tt="capitalize">
-                {getValues(
-                  `weeks.${weekIndex}.days.${dayIndex}.workouts.${wI}.name`
-                )}
-              </Text>
-              {getValues(
-                `weeks.${weekIndex}.days.${dayIndex}.workouts.${wI}.records`
-              ) ? (
-                <RecordSection
-                  getValues={getValues}
-                  control={control}
-                  register={register}
-                  errors={errors}
-                  exerciseId={workout.exerciseId}
-                />
-              ) : null}
-            </Group>
-          );
-        } else {
-          return <div key={workout.id}>Cluster Workout</div>;
-        }
-      })}
-    </>
+    <div>
+      {getValues(`weeks.${weekIndex}.days.${dayIndex}.workouts`).length &&
+        fields.map((workout: SingleWorkoutType | ClusterWorkoutType, wI) => {
+          if (
+            getValues(
+              `weeks.${weekIndex}.days.${dayIndex}.workouts.${wI}.type`
+            ) === "single"
+          ) {
+            return (
+              <SingleWorkoutSection
+                key={`workout ${wI}`}
+                getValues={getValues}
+                control={control}
+                register={register}
+                errors={errors}
+                workoutIndex={wI}
+                remove={remove}
+              />
+            );
+          }
+          if (
+            getValues(
+              `weeks.${weekIndex}.days.${dayIndex}.workouts.${wI}.type`
+            ) === "cluster"
+          ) {
+            return (
+              <ClusterSection
+                key={`workout ${wI}`}
+                getValues={getValues}
+                control={control}
+                register={register}
+                errors={errors}
+                workoutIndex={wI}
+                remove={remove}
+              />
+            );
+          }
+        })}
+    </div>
   );
 }
