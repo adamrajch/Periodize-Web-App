@@ -37,7 +37,7 @@ export default function DaySection({
 
   const { fields } = useFieldArray({
     control,
-    name: `weeks.${weekIndex}.days` as `weeks.${weekIndex}.days`,
+    name: `weeks.${weekIndex}.days` as const,
   });
 
   function addWorkouts(exercise: WorkoutType) {

@@ -67,7 +67,6 @@ export default function EditProgramForm({ id, template }: Props) {
 
   function deleteWeek(index: number) {
     if (fields.length === 1) {
-      // starter template
       remove(index);
       reset({
         weeks: [

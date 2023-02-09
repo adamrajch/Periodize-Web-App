@@ -6,10 +6,10 @@ import {
   Group,
   Modal,
   Stack,
+  Tabs,
   Text,
   useMantineTheme,
 } from "@mantine/core";
-import type { Exercise } from "@prisma/client";
 import { IconPlus, IconX } from "@tabler/icons";
 import { useCallback, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
@@ -17,7 +17,6 @@ import { z } from "zod";
 import useSearchExercises from "../../hooks/useSearchExercises";
 import type { WorkoutType } from "../../types/ProgramTypes";
 import { SingleWorkout } from "../../types/ProgramTypes";
-import HFTextInput from "../ui/HFTexInput";
 
 type AddWorkoutModalProps = {
   addWorkouts: (exercise: WorkoutType) => void;
@@ -40,6 +39,7 @@ export function stopPropagate(callback: () => void) {
 
 export default function AddWorkoutModal({ addWorkouts }: AddWorkoutModalProps) {
   const [opened, setOpened] = useState(false);
+  const [activeTab, setActiveTab] = useState<string | null>("single");
   const theme = useMantineTheme();
   const { query, recordList, setQuery, resetQuery } = useSearchExercises();
 
@@ -61,7 +61,7 @@ export default function AddWorkoutModal({ addWorkouts }: AddWorkoutModalProps) {
     reset();
   }
 
-  const submitForm = useCallback(async (event) => {
+  const submitForm = useCallback(async () => {
     if (getValues("exercises").length > 1) {
       addWorkouts({
         type: "cluster",
@@ -94,33 +94,19 @@ export default function AddWorkoutModal({ addWorkouts }: AddWorkoutModalProps) {
         transitionDuration={200}
         transitionTimingFunction="ease"
       >
-        {/* <form
-          onSubmit={stopPropagate(handleSubmit(submitForm))}
-          id="addWorkout"
-        > */}
-        <HFTextInput
-          label="Search Lifts"
-          placeholder="Squat"
-          value={query}
-          onChange={(event) => setQuery(event.currentTarget.value)}
-        />
-        <Autocomplete
-          value={query}
-          onChange={(s) => {
-            setQuery(s);
-          }}
-          label="Search Lifts"
-          placeholder="Squat"
-          data={recordList.map((e) => ({
-            ...e,
-            value: e.id,
-          }))}
-        />
-        <Stack mt="sm" spacing={0}>
-          {recordList?.map((exercise: Exercise) => (
-            <Button
-              key={exercise.id}
-              onClick={() => {
+        <Tabs value={activeTab} onTabChange={setActiveTab}>
+          <Tabs.List grow>
+            <Tabs.Tab value="single">Add Exercise</Tabs.Tab>
+            <Tabs.Tab value="cluster">Superset</Tabs.Tab>
+          </Tabs.List>
+
+          <Tabs.Panel value="single">
+            <Autocomplete
+              value={query}
+              onChange={(s) => {
+                setQuery(s);
+              }}
+              onItemSubmit={(exercise) => {
                 append({
                   type: "single",
                   exerciseId: exercise.id,
@@ -139,14 +125,14 @@ export default function AddWorkoutModal({ addWorkouts }: AddWorkoutModalProps) {
                 resetQuery();
                 setQuery("");
               }}
-              fullWidth
-              radius={0}
-              variant="outline"
-            >
-              {exercise.name}
-            </Button>
-          ))}
-        </Stack>
+              label="Search Lifts"
+              placeholder="Squat"
+              data={recordList}
+            />
+          </Tabs.Panel>
+          <Tabs.Panel value="cluster">Second panel</Tabs.Panel>
+        </Tabs>
+
         <Stack my="sm" spacing={4}>
           {fields.map((e, ei) => (
             <Group key={e.id} sx={{ border: "1px solid white" }} grow>
@@ -164,11 +150,10 @@ export default function AddWorkoutModal({ addWorkouts }: AddWorkoutModalProps) {
           ))}
         </Stack>
         {fields.length ? (
-          <Button fullWidth form="addWorkout" onClick={(e) => submitForm(e)}>
+          <Button fullWidth form="addWorkout" onClick={() => submitForm()}>
             {fields.length === 1 ? "Add Workout" : "Add Superset"}
           </Button>
         ) : null}
-        {/* </form> */}
       </Modal>
 
       <Group position="center">
