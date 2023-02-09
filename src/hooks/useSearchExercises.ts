@@ -19,12 +19,7 @@ export default function useSearchExercises() {
 
   return {
     query,
-    recordList: data
-      ? data.map((e) => ({
-          ...e,
-          value: e.name,
-        }))
-      : [],
+    exerciseList: data ?? [],
     setQuery,
     resetQuery,
   };

@@ -4,8 +4,8 @@ import { useFieldArray } from "react-hook-form";
 import { useEditProgramStore } from "../../lib/slices/editProgramStore";
 import HFNumberInput from "../ui/HFNumberInput";
 import HFTextInput from "../ui/HFTexInput";
+import ClusterExerciseSection from "./ClusterExerciseSection";
 import type { EditFormSectionProps } from "./DaySection";
-import SingleWorkoutSection from "./SingleWorkoutSection";
 
 export default function ClusterSection({
   control,
@@ -20,13 +20,9 @@ export default function ClusterSection({
 }) {
   const { weekIndex, dayIndex } = useEditProgramStore();
 
-  const {
-    fields,
-    remove: deleteExercise,
-    append,
-  } = useFieldArray({
+  const { fields, remove: deleteExercise } = useFieldArray({
     control,
-    name: `weeks.${weekIndex}.days.${dayIndex}.workouts.${workoutIndex}.exercises` as `weeks.${weekIndex}.days.${dayIndex}.workouts.${workoutIndex}.exercises`,
+    name: `weeks.${weekIndex}.days.${dayIndex}.workouts.${workoutIndex}.exercises` as `weeks.0.days.0.workouts.0.exercises`,
   });
 
   return (
@@ -66,15 +62,14 @@ export default function ClusterSection({
           <IconX />
         </ActionIcon>
       </Group>
-
       {fields.map((exercise, ei) => (
-        <SingleWorkoutSection
+        <ClusterExerciseSection
           key={exercise.id}
           getValues={getValues}
           control={control}
           register={register}
           errors={errors}
-          clusterIndex={workoutIndex}
+          workoutIndex={workoutIndex}
           exerciseIndex={ei}
           remove={deleteExercise}
         />

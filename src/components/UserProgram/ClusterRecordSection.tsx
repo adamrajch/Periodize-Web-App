@@ -22,10 +22,7 @@ export default function RecordSection({
   const { weekIndex, dayIndex } = useEditProgramStore();
   const { fields, remove, append } = useFieldArray({
     control,
-    name:
-      typeof clusterIndex === "string"
-        ? (`weeks.${weekIndex}.days.${dayIndex}.workouts.${clusterIndex}.exercises.${exerciseIndex}.records` as const)
-        : (`weeks.${weekIndex}.days.${dayIndex}.workouts.${workoutIndex}.records` as const),
+    name: `weeks.${weekIndex}.days.${dayIndex}.workouts.${clusterIndex}.exercises.${exerciseIndex}.records` as const,
   });
   const path =
     typeof clusterIndex === "number"

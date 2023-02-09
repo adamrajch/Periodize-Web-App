@@ -17,7 +17,7 @@ export default function WorkoutSection({
   const { weekIndex, dayIndex } = useEditProgramStore();
   const { fields, remove } = useFieldArray({
     control,
-    name: `weeks.${weekIndex}.days.${dayIndex}.workouts` as `weeks.${weekIndex}.days.${dayIndex}.workouts`,
+    name: `weeks.${weekIndex}.days.${dayIndex}.workouts` as const,
   });
 
   return (

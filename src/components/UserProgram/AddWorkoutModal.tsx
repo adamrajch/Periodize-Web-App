@@ -1,13 +1,13 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   ActionIcon,
-  Autocomplete,
+  Box,
   Button,
   Group,
   Modal,
   Stack,
-  Tabs,
   Text,
+  UnstyledButton,
   useMantineTheme,
 } from "@mantine/core";
 import { IconPlus, IconX } from "@tabler/icons";
@@ -17,6 +17,7 @@ import { z } from "zod";
 import useSearchExercises from "../../hooks/useSearchExercises";
 import type { WorkoutType } from "../../types/ProgramTypes";
 import { SingleWorkout } from "../../types/ProgramTypes";
+import HFTextInput from "../ui/HFTexInput";
 
 type AddWorkoutModalProps = {
   addWorkouts: (exercise: WorkoutType) => void;
@@ -39,9 +40,9 @@ export function stopPropagate(callback: () => void) {
 
 export default function AddWorkoutModal({ addWorkouts }: AddWorkoutModalProps) {
   const [opened, setOpened] = useState(false);
-  const [activeTab, setActiveTab] = useState<string | null>("single");
+
   const theme = useMantineTheme();
-  const { query, recordList, setQuery, resetQuery } = useSearchExercises();
+  const { query, exerciseList, setQuery, resetQuery } = useSearchExercises();
 
   const { control, reset, getValues } = useForm<WorkoutFormType>({
     defaultValues: {
@@ -76,6 +77,32 @@ export default function AddWorkoutModal({ addWorkouts }: AddWorkoutModalProps) {
     }
   }, []);
 
+  function AddExercisesButton() {
+    if (getValues("exercises").length < 1) {
+      return <Button disabled>Add</Button>;
+    }
+    if (getValues("exercises").length === 1) {
+      return (
+        <Button
+          onClick={() => {
+            submitForm();
+          }}
+        >
+          Add
+        </Button>
+      );
+    }
+
+    return (
+      <Button
+        onClick={() => {
+          submitForm();
+        }}
+      >
+        Add Superset {`(${getValues("exercises").length})`}
+      </Button>
+    );
+  }
   return (
     <>
       <Modal
@@ -93,67 +120,84 @@ export default function AddWorkoutModal({ addWorkouts }: AddWorkoutModalProps) {
         transition="fade"
         transitionDuration={200}
         transitionTimingFunction="ease"
+        padding={0}
+        size="lg"
       >
-        <Tabs value={activeTab} onTabChange={setActiveTab}>
-          <Tabs.List grow>
-            <Tabs.Tab value="single">Add Exercise</Tabs.Tab>
-            <Tabs.Tab value="cluster">Superset</Tabs.Tab>
-          </Tabs.List>
+        <Box p="md">
+          <Group position="apart">
+            <Text>Add Lift(s)</Text>
+            <AddExercisesButton />
+          </Group>
+          <HFTextInput
+            label="Search Lifts"
+            placeholder="Squat"
+            value={query}
+            onChange={(e) => {
+              setQuery(e.currentTarget.value);
+            }}
+            rightSection={
+              query.length ? (
+                <ActionIcon onClick={() => setQuery("")}>
+                  <IconX />
+                </ActionIcon>
+              ) : null
+            }
+          />
+        </Box>
 
-          <Tabs.Panel value="single">
-            <Autocomplete
-              value={query}
-              onChange={(s) => {
-                setQuery(s);
+        <Stack my="sm" spacing={0}>
+          {exerciseList.map((exercise) => (
+            <UnstyledButton
+              key={exercise.id}
+              p="md"
+              sx={{
+                backgroundColor: getValues("exercises").find(
+                  (e) => e.exerciseId === exercise.id
+                )
+                  ? "green"
+                  : "",
+                borderBottom: "2px solid black",
               }}
-              onItemSubmit={(exercise) => {
-                append({
-                  type: "single",
-                  exerciseId: exercise.id,
-                  name: exercise.name,
-                  load: exercise.load,
-                  distance: exercise.distance,
-                  time: exercise.time,
-                  records: [
-                    {
-                      exerciseId: exercise.id,
-                      sets: 5,
-                      reps: 5,
-                    },
-                  ],
-                });
-                resetQuery();
-                setQuery("");
+              onClick={() => {
+                const i = getValues("exercises").findIndex(
+                  (e) => e.exerciseId === exercise.id
+                );
+                if (i > -1) {
+                  remove(i);
+                } else {
+                  append({
+                    type: "single",
+                    exerciseId: exercise.id,
+                    name: exercise.name,
+                    load: exercise.load,
+                    distance: exercise.distance,
+                    time: exercise.time,
+                    records: [
+                      {
+                        exerciseId: exercise.id,
+                        sets: 5,
+                        reps: 5,
+                      },
+                    ],
+                  });
+                }
               }}
-              label="Search Lifts"
-              placeholder="Squat"
-              data={recordList}
-            />
-          </Tabs.Panel>
-          <Tabs.Panel value="cluster">Second panel</Tabs.Panel>
-        </Tabs>
-
-        <Stack my="sm" spacing={4}>
-          {fields.map((e, ei) => (
-            <Group key={e.id} sx={{ border: "1px solid white" }} grow>
-              <Text
-                align="center"
-                size={fields.length > 1 ? "sm" : "lg"}
-                tt="capitalize"
-              >
-                {`${ei + 1} ${e.name}`}
-              </Text>
-              <ActionIcon variant="transparent" onClick={() => remove(ei)}>
-                <IconX />
-              </ActionIcon>
-            </Group>
+            >
+              <Group>
+                <Stack>
+                  <Text align="center" size="lg" tt="capitalize" fw="bold">
+                    {exercise.name}
+                  </Text>
+                  {exercise.categories.map((c) => (
+                    <Text key={c} c="dimmed" component="span">
+                      {c}
+                    </Text>
+                  ))}
+                </Stack>
+              </Group>
+            </UnstyledButton>
           ))}
         </Stack>
-        {fields.length ? (
-          <Button fullWidth form="addWorkout" onClick={() => submitForm()}>
-            {fields.length === 1 ? "Add Workout" : "Add Superset"}
-          </Button>
-        ) : null}
       </Modal>
 
       <Group position="center">
