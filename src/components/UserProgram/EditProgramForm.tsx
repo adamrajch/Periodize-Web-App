@@ -173,6 +173,7 @@ export default function EditProgramForm({ id, template }: Props) {
         </Button>
 
         <pre>{JSON.stringify(watch(), null, 2)}</pre>
+        <pre>{JSON.stringify(errors, null, 2)}</pre>
       </form>
     </>
   );

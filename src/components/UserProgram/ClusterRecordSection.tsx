@@ -5,46 +5,42 @@ import { useEditProgramStore } from "../../lib/slices/editProgramStore";
 import HFNumberInput from "../ui/HFNumberInput";
 import type { EditFormSectionProps } from "./DaySection";
 
-export default function RecordSection({
+export default function ClusterRecordSection({
   control,
   getValues,
   errors,
   exerciseId,
   clusterIndex,
   exerciseIndex,
-  workoutIndex,
 }: Omit<EditFormSectionProps, "setValue"> & {
   exerciseId: string;
-  clusterIndex?: number;
-  exerciseIndex?: number;
-  workoutIndex?: number;
+  clusterIndex: number;
+  exerciseIndex: number;
 }) {
   const { weekIndex, dayIndex } = useEditProgramStore();
+  //  "weeks.0.days.0.workouts.0.exercises.0.records";
   const { fields, remove, append } = useFieldArray({
     control,
     name: `weeks.${weekIndex}.days.${dayIndex}.workouts.${clusterIndex}.exercises.${exerciseIndex}.records` as const,
   });
-  const path =
-    typeof clusterIndex === "number"
-      ? `weeks.${weekIndex}.days.${dayIndex}.workouts.${clusterIndex}.exercises.${exerciseIndex}.records`
-      : `weeks.${weekIndex}.days.${dayIndex}.workouts.${workoutIndex}.records`;
-
+  const path = `weeks.${weekIndex}.days.${dayIndex}.workouts.${clusterIndex}.exercises.${exerciseIndex}.records`;
   return (
     <div>
-      <span>Hello</span>
-      <pre>{JSON.stringify(fields, null, 2)}</pre>
       {fields.map((record, rI) => (
         <Group key={record.id}>
+          <div>im here</div>
           <HFNumberInput
             label="sets"
             control={control}
-            // error={
-            //   errors.weeks?.[weekIndex]?.days?.[dayIndex]?.workouts?.[
-            //     workoutIndex
-            //   ]?.records?.[rI]?.sets.message
-            // }
+            error={
+              errors.weeks?.[weekIndex]?.days?.[dayIndex]?.workouts?.[
+                clusterIndex
+              ]?.exercises?.[exerciseIndex]?.records?.[rI].sets
+            }
             fieldName={path + `.${rI}.sets`}
-            value={getValues(path + `.${rI}.sets`)}
+            value={getValues(
+              `weeks.${weekIndex}.days.${dayIndex}.workouts.${clusterIndex}.exercises.${exerciseIndex}.records.${rI}.sets`
+            )}
             min={1}
             step={1}
           />
@@ -52,13 +48,13 @@ export default function RecordSection({
             label="reps"
             error={
               errors.weeks?.[weekIndex]?.days?.[dayIndex]?.workouts?.[
-                workoutIndex
-              ]?.records?.[rI].reps
+                clusterIndex
+              ]?.exercises?.[exerciseIndex]?.records?.[rI].reps
             }
-            fieldName={`weeks.${weekIndex}.days.${dayIndex}.workouts.${workoutIndex}.records.${rI}.reps`}
             control={control}
+            fieldName={path + `.${rI}.reps`}
             value={getValues(
-              `weeks.${weekIndex}.days.${dayIndex}.workouts.${workoutIndex}.records.${rI}.reps`
+              `weeks.${weekIndex}.days.${dayIndex}.workouts.${clusterIndex}.exercises.${exerciseIndex}.records.${rI}.reps`
             )}
             min={1}
             step={1}
@@ -68,13 +64,13 @@ export default function RecordSection({
             label="rpe"
             error={
               errors.weeks?.[weekIndex]?.days?.[dayIndex]?.workouts?.[
-                workoutIndex
-              ]?.records?.[rI].rpe
+                clusterIndex
+              ]?.exercises?.[exerciseIndex]?.records?.[rI].rpe
             }
-            fieldName={`weeks.${weekIndex}.days.${dayIndex}.workouts.${workoutIndex}.records.${rI}.rpe`}
             control={control}
+            fieldName={path + `.${rI}.rpe`}
             value={getValues(
-              `weeks.${weekIndex}.days.${dayIndex}.workouts.${workoutIndex}.records.${rI}.rpe`
+              `weeks.${weekIndex}.days.${dayIndex}.workouts.${clusterIndex}.exercises.${exerciseIndex}.records.${rI}.rpe`
             )}
             max={10}
             step={1}
@@ -83,13 +79,13 @@ export default function RecordSection({
             label="percent"
             error={
               errors.weeks?.[weekIndex]?.days?.[dayIndex]?.workouts?.[
-                workoutIndex
-              ]?.records?.[rI].percent
+                clusterIndex
+              ]?.exercises?.[exerciseIndex]?.records?.[rI].percent
             }
-            fieldName={`weeks.${weekIndex}.days.${dayIndex}.workouts.${workoutIndex}.records.${rI}.percent`}
             control={control}
+            fieldName={path + `.${rI}.percent`}
             value={getValues(
-              `weeks.${weekIndex}.days.${dayIndex}.workouts.${workoutIndex}.records.${rI}.percent`
+              `weeks.${weekIndex}.days.${dayIndex}.workouts.${clusterIndex}.exercises.${exerciseIndex}.records.${rI}.percent`
             )}
             min={1}
             step={5}

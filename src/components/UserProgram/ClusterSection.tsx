@@ -69,8 +69,9 @@ export default function ClusterSection({
           control={control}
           register={register}
           errors={errors}
-          workoutIndex={workoutIndex}
+          clusterIndex={workoutIndex}
           exerciseIndex={ei}
+          exerciseId={exercise.id}
           remove={deleteExercise}
         />
       ))}

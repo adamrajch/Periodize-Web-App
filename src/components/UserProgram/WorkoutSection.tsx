@@ -22,43 +22,44 @@ export default function WorkoutSection({
 
   return (
     <div>
-      {getValues(`weeks.${weekIndex}.days.${dayIndex}.workouts`).length &&
-        fields.map((workout: SingleWorkoutType | ClusterWorkoutType, wI) => {
-          if (
-            getValues(
-              `weeks.${weekIndex}.days.${dayIndex}.workouts.${wI}.type`
-            ) === "single"
-          ) {
-            return (
-              <SingleWorkoutSection
-                key={`workout ${wI}`}
-                getValues={getValues}
-                control={control}
-                register={register}
-                errors={errors}
-                workoutIndex={wI}
-                remove={remove}
-              />
-            );
-          }
-          if (
-            getValues(
-              `weeks.${weekIndex}.days.${dayIndex}.workouts.${wI}.type`
-            ) === "cluster"
-          ) {
-            return (
-              <ClusterSection
-                key={`workout ${wI}`}
-                getValues={getValues}
-                control={control}
-                register={register}
-                errors={errors}
-                workoutIndex={wI}
-                remove={remove}
-              />
-            );
-          }
-        })}
+      {getValues(`weeks.${weekIndex}.days.${dayIndex}.workouts`).length
+        ? fields.map((workout: SingleWorkoutType | ClusterWorkoutType, wI) => {
+            if (
+              getValues(
+                `weeks.${weekIndex}.days.${dayIndex}.workouts.${wI}.type`
+              ) === "single"
+            ) {
+              return (
+                <SingleWorkoutSection
+                  key={`workout ${wI}`}
+                  getValues={getValues}
+                  control={control}
+                  register={register}
+                  errors={errors}
+                  workoutIndex={wI}
+                  remove={remove}
+                />
+              );
+            }
+            if (
+              getValues(
+                `weeks.${weekIndex}.days.${dayIndex}.workouts.${wI}.type`
+              ) === "cluster"
+            ) {
+              return (
+                <ClusterSection
+                  key={`workout ${wI}`}
+                  getValues={getValues}
+                  control={control}
+                  register={register}
+                  errors={errors}
+                  workoutIndex={wI}
+                  remove={remove}
+                />
+              );
+            }
+          })
+        : null}
     </div>
   );
 }

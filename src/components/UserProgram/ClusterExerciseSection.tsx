@@ -1,6 +1,8 @@
 import { ActionIcon, Group, Text } from "@mantine/core";
 import { IconX } from "@tabler/icons";
+import { useFieldArray } from "react-hook-form";
 import { useEditProgramStore } from "../../lib/slices/editProgramStore";
+import HFTextInput from "../ui/HFTexInput";
 import type { EditFormSectionProps } from "./DaySection";
 
 export default function ClusterExerciseSection({
@@ -9,20 +11,27 @@ export default function ClusterExerciseSection({
   errors,
   register,
   remove,
-  workoutIndex,
+  clusterIndex,
   exerciseIndex,
+  exerciseId,
 }: Omit<EditFormSectionProps, "setValue"> & {
-  workoutIndex: number;
+  clusterIndex: number;
   exerciseIndex: number;
+  exerciseId: string;
   remove: (index?: number | number[]) => void;
 }) {
   const { weekIndex, dayIndex } = useEditProgramStore();
 
+  const { fields, append } = useFieldArray({
+    control,
+    name: `weeks.${weekIndex}.days.${dayIndex}.workouts.${clusterIndex}.exercises.${exerciseIndex}.records` as `weeks.0.days.0.workouts.0.exercises.0.records`,
+  });
   return (
     <Group align="flex-start">
+      <div>Im here</div>
       <Text fw={500} fz="xl" tt="capitalize">
         {getValues(
-          `weeks.${weekIndex}.days.${dayIndex}.workouts.${workoutIndex}.exercises.${exerciseIndex}.name`
+          `weeks.${weekIndex}.days.${dayIndex}.workouts.${clusterIndex}.exercises.${exerciseIndex}.name`
         )}
       </Text>
       <ActionIcon
@@ -34,16 +43,42 @@ export default function ClusterExerciseSection({
         <IconX />
       </ActionIcon>
 
-      {/* <RecordSection
-        getValues={getValues}
-        control={control}
-        register={register}
-        errors={errors}
-        exerciseId={"id for now"}
-        exerciseIndex={exerciseIndex}
-        workoutIndex={workoutIndex ? workoutIndex : undefined}
-        clusterIndex={clusterIndex ? clusterIndex : undefined}
-      /> */}
+      {fields.map((record, ri) => (
+        // <ClusterRecordSection
+        //   getValues={getValues}
+        //   control={control}
+        //   register={register}
+        //   errors={errors}
+        //   exerciseIndex={exerciseIndex}
+        //   clusterIndex={clusterIndex}
+        //   exerciseId={exerciseId}
+        //   recordIndex={ri}
+        // />
+        // <HFNumberInput
+        //   key={record.id}
+        //   label="sets"
+        //   control={control}
+        //   error={
+        //     errors.weeks?.[weekIndex]?.days?.[dayIndex]?.workouts?.[
+        //       clusterIndex
+        //     ]?.exercises?.[exerciseIndex]?.records?.[ri].sets
+        //   }
+        //   fieldName={`weeks.${weekIndex}.days.${dayIndex}.workouts.${clusterIndex}.exercises.${exerciseIndex}.records.${ri}.sets`}
+        //   value={getValues(
+        //     `weeks.${weekIndex}.days.${dayIndex}.workouts.${clusterIndex}.exercises.${exerciseIndex}.records.${ri}.sets`
+        //   )}
+        //   min={1}
+        //   step={1}
+        // />
+        <HFTextInput
+          key={record.id}
+          label="sets"
+          registerProps={register(
+            `weeks.${weekIndex}.days.${dayIndex}.workouts.${clusterIndex}.exercises.${exerciseIndex}.records.${ri}.sets`
+          )}
+        />
+        // <div key={record.id}>record </div>
+      ))}
     </Group>
   );
 }
