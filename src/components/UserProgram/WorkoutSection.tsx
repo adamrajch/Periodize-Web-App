@@ -13,53 +13,49 @@ export default function WorkoutSection({
   register,
   getValues,
   errors,
-}: Omit<EditFormSectionProps, "setValue">) {
+  wi,
+  di,
+}: Omit<EditFormSectionProps, "setValue"> & { wi: number; di: number }) {
   const { weekIndex, dayIndex } = useEditProgramStore();
   const { fields, remove } = useFieldArray({
     control,
-    name: `weeks.${weekIndex}.days.${dayIndex}.workouts` as const,
+    name: `weeks.${wi}.days.${di}.workouts` as "weeks.0.days.0.workouts",
   });
 
   return (
     <div>
-      {getValues(`weeks.${weekIndex}.days.${dayIndex}.workouts`).length
-        ? fields.map((workout: SingleWorkoutType | ClusterWorkoutType, wI) => {
-            if (
-              getValues(
-                `weeks.${weekIndex}.days.${dayIndex}.workouts.${wI}.type`
-              ) === "single"
-            ) {
-              return (
-                <SingleWorkoutSection
-                  key={`workout ${wI}`}
-                  getValues={getValues}
-                  control={control}
-                  register={register}
-                  errors={errors}
-                  workoutIndex={wI}
-                  remove={remove}
-                />
-              );
-            }
-            if (
-              getValues(
-                `weeks.${weekIndex}.days.${dayIndex}.workouts.${wI}.type`
-              ) === "cluster"
-            ) {
-              return (
-                <ClusterSection
-                  key={`workout ${wI}`}
-                  getValues={getValues}
-                  control={control}
-                  register={register}
-                  errors={errors}
-                  workoutIndex={wI}
-                  remove={remove}
-                />
-              );
-            }
-          })
-        : null}
+      {fields.map((workout: SingleWorkoutType | ClusterWorkoutType, wI) => {
+        if (workout.type === "single") {
+          return (
+            <SingleWorkoutSection
+              key={`workout ${wI}`}
+              getValues={getValues}
+              control={control}
+              register={register}
+              errors={errors}
+              workoutIndex={wI}
+              remove={remove}
+            />
+          );
+        }
+        if (
+          getValues(`weeks.${wi}.days.${di}.workouts.${wI}.type`) === "cluster"
+        ) {
+          return (
+            <ClusterSection
+              key={`workout ${wI}`}
+              getValues={getValues}
+              control={control}
+              register={register}
+              errors={errors}
+              workoutIndex={wI}
+              removeWorkout={remove}
+              wi={wi}
+              di={di}
+            />
+          );
+        }
+      })}
     </div>
   );
 }

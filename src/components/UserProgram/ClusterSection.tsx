@@ -1,7 +1,6 @@
 import { ActionIcon, Group } from "@mantine/core";
-import { IconPlus, IconX } from "@tabler/icons";
+import { IconX } from "@tabler/icons";
 import { useFieldArray } from "react-hook-form";
-import { useEditProgramStore } from "../../lib/slices/editProgramStore";
 import HFNumberInput from "../ui/HFNumberInput";
 import HFTextInput from "../ui/HFTexInput";
 import ClusterExerciseSection from "./ClusterExerciseSection";
@@ -12,17 +11,19 @@ export default function ClusterSection({
   getValues,
   errors,
   register,
-  remove,
+  removeWorkout,
   workoutIndex,
+  di,
+  wi,
 }: Omit<EditFormSectionProps, "setValue"> & {
   workoutIndex: number;
-  remove: (index?: number | number[]) => void;
+  di: number;
+  wi: number;
+  removeWorkout: (index?: number | number[]) => void;
 }) {
-  const { weekIndex, dayIndex } = useEditProgramStore();
-
-  const { fields, remove: deleteExercise } = useFieldArray({
+  const { fields, remove: removeExercise } = useFieldArray({
     control,
-    name: `weeks.${weekIndex}.days.${dayIndex}.workouts.${workoutIndex}.exercises` as `weeks.0.days.0.workouts.0.exercises`,
+    name: `weeks.${wi}.days.${di}.workouts.${workoutIndex}.exercises` as `weeks.0.days.0.workouts.0.exercises`,
   });
 
   return (
@@ -30,49 +31,46 @@ export default function ClusterSection({
       <Group position="center">
         <HFTextInput
           label="Superset Name"
-          placeholder="yah yeet"
+          placeholder="Bench Row Superset"
           registerProps={register(
-            `weeks.${weekIndex}.days.${dayIndex}.workouts.${workoutIndex}.name` as const
+            `weeks.${wi}.days.${di}.workouts.${workoutIndex}.name` as const
           )}
           error={
-            errors.weeks?.[weekIndex]?.days?.[dayIndex]?.workouts?.[
-              workoutIndex
-            ]?.message
+            errors.weeks?.[wi]?.days?.[di]?.workouts?.[workoutIndex]?.message
           }
         />
         <HFNumberInput
           label="Interval"
           control={control}
           error={
-            errors.weeks?.[weekIndex]?.days?.[dayIndex]?.workouts?.[
-              workoutIndex
-            ]?.message
+            errors.weeks?.[wi]?.days?.[di]?.workouts?.[workoutIndex]?.message
           }
-          fieldName={`weeks.${weekIndex}.days.${dayIndex}.workouts.${workoutIndex}.interval`}
+          fieldName={`weeks.${wi}.days.${di}.workouts.${workoutIndex}.interval`}
           value={getValues(
-            `weeks.${weekIndex}.days.${dayIndex}.workouts.${workoutIndex}.interval`
+            `weeks.${wi}.days.${di}.workouts.${workoutIndex}.interval`
           )}
           min={1}
           step={1}
         />
-        <ActionIcon>
-          <IconPlus />
-        </ActionIcon>
-        <ActionIcon color="yellow" onClick={() => remove(workoutIndex)}>
+
+        <ActionIcon color="yellow" onClick={() => removeWorkout(workoutIndex)}>
           <IconX />
         </ActionIcon>
       </Group>
+      <div>exercises : {fields.length} </div>
       {fields.map((exercise, ei) => (
         <ClusterExerciseSection
-          key={exercise.id}
+          key={exercise.exerciseId}
           getValues={getValues}
           control={control}
           register={register}
           errors={errors}
           clusterIndex={workoutIndex}
           exerciseIndex={ei}
-          exerciseId={exercise.id}
-          remove={deleteExercise}
+          exerciseId={exercise.exerciseId}
+          removeExercise={removeExercise}
+          wi={wi}
+          di={di}
         />
       ))}
     </div>

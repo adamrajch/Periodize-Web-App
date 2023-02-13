@@ -32,12 +32,13 @@ export default function DaySection({
   setValue,
   getValues,
   errors,
-}: EditFormSectionProps) {
+  wi,
+}: EditFormSectionProps & { wi: number }) {
   const { weekIndex, dayIndex, setDayIndex } = useEditProgramStore();
 
   const { fields } = useFieldArray({
     control,
-    name: `weeks.${weekIndex}.days` as const,
+    name: `weeks.${weekIndex}.days` as "weeks.0.days",
   });
 
   function addWorkouts(exercise: WorkoutType) {
@@ -62,27 +63,25 @@ export default function DaySection({
         ))}
       </Tabs.List>
 
-      {fields.map((day, dI) => (
-        <Tabs.Panel key={`day ${day.id}`} value={`${dI}`}>
+      {fields.map((day, di) => (
+        <Tabs.Panel key={`day ${day.id}`} value={`${di}`}>
           <Stack my="lg">
             <Group align="flex-end">
               <HFTextInput
                 placeholder="Day Name"
                 label="Day Name"
-                registerProps={register(
-                  `weeks.${weekIndex}.days.${dayIndex}.name` as const
-                )}
+                registerProps={register(`weeks.${wi}.days.${di}.name` as const)}
               />
-              <AddWorkoutModal
-                addWorkouts={addWorkouts}
-                // getValues={getValues}
-              />
+              <AddWorkoutModal addWorkouts={addWorkouts} />
             </Group>
+
             <WorkoutSection
               getValues={getValues}
               control={control}
               register={register}
               errors={errors}
+              wi={wi}
+              di={di}
             />
           </Stack>
         </Tabs.Panel>

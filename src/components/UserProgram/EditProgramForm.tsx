@@ -43,7 +43,20 @@ export default function EditProgramForm({ id, template }: Props) {
     formState: { errors, isSubmitting, isDirty },
   } = useForm<WizardWeeksFormType>({
     defaultValues: {
-      weeks: template?.weeks ? template.weeks : [],
+      // weeks: template?.weeks ? template.weeks : [],
+      weeks: [
+        {
+          name: "",
+          summary: "",
+          days: [
+            {
+              name: "sunday",
+              summary: "",
+              workouts: [],
+            },
+          ],
+        },
+      ],
     },
     resolver: zodResolver(WizardWeeksSchema),
   });
@@ -94,7 +107,7 @@ export default function EditProgramForm({ id, template }: Props) {
   return (
     <>
       <form onSubmit={handleSubmit(submitForm)} id="editForm">
-        <pre>{`${weekIndex} ${dayIndex}`}</pre>
+        <pre>{`Week-${weekIndex} Day-${dayIndex}`}</pre>
         <Tabs
           value={`${weekIndex}`}
           onTabChange={(val) => setWeekIndex(val ? parseInt(val) : 0)}
@@ -157,6 +170,7 @@ export default function EditProgramForm({ id, template }: Props) {
                   setValue={setValue}
                   getValues={getValues}
                   errors={errors}
+                  wi={wI}
                 />
               </Box>
             </Tabs.Panel>
@@ -171,9 +185,10 @@ export default function EditProgramForm({ id, template }: Props) {
         >
           Save
         </Button>
-
-        <pre>{JSON.stringify(watch(), null, 2)}</pre>
-        <pre>{JSON.stringify(errors, null, 2)}</pre>
+        <Group align="flex-start">
+          <pre>values: {JSON.stringify(watch(), null, 2)}</pre>
+          <pre> errors: {JSON.stringify(errors, null, 2)}</pre>
+        </Group>
       </form>
     </>
   );
