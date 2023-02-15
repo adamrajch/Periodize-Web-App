@@ -13,6 +13,13 @@ export const programRouter = createTRPCRouter({
       },
     });
   }),
+  delete: protectedProcedure.input(z.string()).mutation(({ ctx, input }) => {
+    return ctx.prisma.program.delete({
+      where: {
+        id: input,
+      },
+    });
+  }),
   getAllByAuthor: protectedProcedure.query(({ ctx }) => {
     return ctx.prisma.program.findMany({
       where: {

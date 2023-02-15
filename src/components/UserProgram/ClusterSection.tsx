@@ -3,6 +3,7 @@ import { IconX } from "@tabler/icons";
 import { useFieldArray } from "react-hook-form";
 import HFNumberInput from "../ui/HFNumberInput";
 import HFTextInput from "../ui/HFTexInput";
+import AddExerciseToClusterModal from "./AddExerciseToClusterModal";
 import ClusterExerciseSection from "./ClusterExerciseSection";
 import type { EditFormSectionProps } from "./DaySection";
 
@@ -21,10 +22,21 @@ export default function ClusterSection({
   wi: number;
   removeWorkout: (index?: number | number[]) => void;
 }) {
-  const { fields, remove: removeExercise } = useFieldArray({
+  const {
+    fields,
+    remove: removeExercise,
+    append,
+  } = useFieldArray({
     control,
     name: `weeks.${wi}.days.${di}.workouts.${workoutIndex}.exercises` as `weeks.0.days.0.workouts.0.exercises`,
   });
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  function addExercisesToCluster(exercises: any) {
+    for (let i = 0; i < exercises.length; i++) {
+      append(exercises[i]);
+    }
+  }
 
   return (
     <div>
@@ -52,7 +64,9 @@ export default function ClusterSection({
           min={1}
           step={1}
         />
-
+        <AddExerciseToClusterModal
+          addExercisesToCluster={addExercisesToCluster}
+        />
         <ActionIcon color="yellow" onClick={() => removeWorkout(workoutIndex)}>
           <IconX />
         </ActionIcon>

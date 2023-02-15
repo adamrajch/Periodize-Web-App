@@ -72,6 +72,8 @@ export function UserProgramTable({ data }: TableProps) {
         horizontalSpacing="md"
         verticalSpacing="xs"
         sx={{ tableLayout: "fixed", minWidth: 700 }}
+        highlightOnHover
+        withColumnBorders
       >
         <thead>
           <tr>

@@ -1,6 +1,5 @@
 import { Stack } from "@mantine/core";
 import { useFieldArray } from "react-hook-form";
-import { useEditProgramStore } from "../../lib/slices/editProgramStore";
 import ClusterSection from "./ClusterSection";
 import type { EditFormSectionProps } from "./DaySection";
 import SingleWorkoutSection from "./SingleWorkoutSection";
@@ -13,7 +12,7 @@ export default function WorkoutSection({
   wi,
   di,
 }: Omit<EditFormSectionProps, "setValue"> & { wi: number; di: number }) {
-  const { weekIndex, dayIndex } = useEditProgramStore();
+  // const { weekIndex, dayIndex } = useEditProgramStore();
   const { fields, remove } = useFieldArray({
     control,
     name: `weeks.${wi}.days.${di}.workouts` as "weeks.0.days.0.workouts",

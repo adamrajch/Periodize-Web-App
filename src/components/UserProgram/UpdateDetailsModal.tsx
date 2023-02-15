@@ -1,7 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Button,
-  Group,
   Modal,
   MultiSelect,
   Stack,
@@ -134,9 +133,7 @@ export default function UpdateDetailsModal({ program }: AddWorkoutModalProps) {
         </form>
       </Modal>
 
-      <Group position="center">
-        <Button onClick={() => setOpened(true)}>Update Details</Button>
-      </Group>
+      <Button onClick={() => setOpened(true)}>Update Details</Button>
     </>
   );
 }

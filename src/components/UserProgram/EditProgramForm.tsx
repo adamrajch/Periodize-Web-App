@@ -18,12 +18,12 @@ import { api } from "../../utils/api";
 import HFTextInput from "../ui/HFTexInput";
 import DaySection from "./DaySection";
 
-type Props = {
+type EditFormProps = {
   id: string;
-  template: WizardWeeksFormType;
+  template?: WizardWeeksFormType;
 };
 
-export default function EditProgramForm({ id, template }: Props) {
+export default function EditProgramForm({ id, template }: EditFormProps) {
   const { weekIndex, setWeekIndex, dayIndex } = useEditProgramStore();
   const utils = api.useContext();
   const programUpdate = api.program.updateProgramTemplate.useMutation({
@@ -177,17 +177,20 @@ export default function EditProgramForm({ id, template }: Props) {
           ))}
         </Tabs>
 
-        <Button
-          type="submit"
-          disabled={!isDirty}
-          loading={isSubmitting}
-          form="editForm"
-        >
-          Save
-        </Button>
+        <Group position="center">
+          <Button
+            type="submit"
+            disabled={!isDirty}
+            loading={isSubmitting}
+            form="editForm"
+          >
+            Save
+          </Button>
+        </Group>
+
         <Group align="flex-start">
-          <pre>values: {JSON.stringify(watch(), null, 2)}</pre>
-          <pre> errors: {JSON.stringify(errors, null, 2)}</pre>
+          {/* <pre>values: {JSON.stringify(watch(), null, 2)}</pre>
+          <pre> errors: {JSON.stringify(errors, null, 2)}</pre> */}
         </Group>
       </form>
     </>
