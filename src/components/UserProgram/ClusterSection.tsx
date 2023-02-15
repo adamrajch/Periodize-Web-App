@@ -57,7 +57,7 @@ export default function ClusterSection({
           <IconX />
         </ActionIcon>
       </Group>
-      <div>exercises : {fields.length} </div>
+
       {fields.map((exercise, ei) => (
         <ClusterExerciseSection
           key={exercise.exerciseId}

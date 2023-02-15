@@ -51,16 +51,16 @@ export default function AddWorkoutModal({ addWorkouts }: AddWorkoutModalProps) {
     resolver: zodResolver(WorkoutFormSchema),
   });
 
-  const { fields, remove, append } = useFieldArray({
+  const { remove, append } = useFieldArray({
     control,
     name: "exercises",
   });
 
-  function handleClose() {
+  const handleClose = useCallback(() => {
     setOpened(false);
     resetQuery();
     reset();
-  }
+  }, [reset, resetQuery]);
 
   const submitForm = useCallback(async () => {
     if (getValues("exercises").length > 1) {
@@ -75,7 +75,7 @@ export default function AddWorkoutModal({ addWorkouts }: AddWorkoutModalProps) {
       addWorkouts(getValues(`exercises.${0}`));
       handleClose();
     }
-  }, []);
+  }, [addWorkouts, getValues, handleClose]);
 
   function AddExercisesButton() {
     if (getValues("exercises").length < 1) {
@@ -174,6 +174,7 @@ export default function AddWorkoutModal({ addWorkouts }: AddWorkoutModalProps) {
                     time: exercise.time,
                     records: [
                       {
+                        exerciseName: exercise.name,
                         exerciseId: exercise.id,
                         sets: 5,
                         reps: 5,

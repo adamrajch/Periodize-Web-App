@@ -22,6 +22,7 @@ export const RecordSchema = z.object({
     .max(100, { message: "Must be between 1-100" })
     .optional(),
   exerciseId: z.string().min(1),
+  exerciseName: z.string(),
 });
 
 export type RecordSchemaType = z.infer<typeof RecordSchema>;

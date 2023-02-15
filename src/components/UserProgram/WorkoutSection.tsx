@@ -1,9 +1,6 @@
+import { Stack } from "@mantine/core";
 import { useFieldArray } from "react-hook-form";
 import { useEditProgramStore } from "../../lib/slices/editProgramStore";
-import type {
-  ClusterWorkoutType,
-  SingleWorkoutType,
-} from "../../types/ProgramTypes";
 import ClusterSection from "./ClusterSection";
 import type { EditFormSectionProps } from "./DaySection";
 import SingleWorkoutSection from "./SingleWorkoutSection";
@@ -23,27 +20,25 @@ export default function WorkoutSection({
   });
 
   return (
-    <div>
-      {fields.map((workout: SingleWorkoutType | ClusterWorkoutType, wI) => {
+    <Stack spacing="lg">
+      {fields.map((workout, wI) => {
         if (workout.type === "single") {
           return (
             <SingleWorkoutSection
-              key={`workout ${wI}`}
+              key={workout.id}
               getValues={getValues}
               control={control}
               register={register}
               errors={errors}
               workoutIndex={wI}
-              remove={remove}
+              removeWorkout={remove}
             />
           );
         }
-        if (
-          getValues(`weeks.${wi}.days.${di}.workouts.${wI}.type`) === "cluster"
-        ) {
+        if (workout.type === "cluster") {
           return (
             <ClusterSection
-              key={`workout ${wI}`}
+              key={workout.id}
               getValues={getValues}
               control={control}
               register={register}
@@ -56,6 +51,6 @@ export default function WorkoutSection({
           );
         }
       })}
-    </div>
+    </Stack>
   );
 }
