@@ -82,6 +82,7 @@ export default function DaySection({
               errors={errors}
               wi={wi}
               di={di}
+              setValue={setValue}
             />
           </Stack>
         </Tabs.Panel>

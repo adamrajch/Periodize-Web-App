@@ -189,8 +189,8 @@ export default function EditProgramForm({ id, template }: EditFormProps) {
         </Group>
 
         <Group align="flex-start">
-          {/* <pre>values: {JSON.stringify(watch(), null, 2)}</pre>
-          <pre> errors: {JSON.stringify(errors, null, 2)}</pre> */}
+          <pre>values: {JSON.stringify(watch(), null, 2)}</pre>
+          {/* <pre> errors: {JSON.stringify(errors, null, 2)}</pre> */}
         </Group>
       </form>
     </>
