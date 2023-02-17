@@ -98,7 +98,7 @@ export default function ClusterSection({
                 {fields.map((exercise, ei) => (
                   <Draggable
                     key={exercise.id}
-                    draggableId={exercise.id}
+                    draggableId={exercise.id + `wid:${workoutIndex}`}
                     index={ei}
                   >
                     {(provided3, snapshot) => (

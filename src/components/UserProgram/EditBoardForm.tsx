@@ -44,19 +44,6 @@ export default function EditProgramForm({ id, template }: EditFormProps) {
   } = useForm<WizardWeeksFormType>({
     defaultValues: {
       weeks: template?.weeks ? template.weeks : [],
-      // weeks: [
-      //   {
-      //     name: "",
-      //     summary: "",
-      //     days: [
-      //       {
-      //         name: "sunday",
-      //         summary: "",
-      //         workouts: [],
-      //       },
-      //     ],
-      //   },
-      // ],
     },
     resolver: zodResolver(WizardWeeksSchema),
   });

@@ -36,7 +36,7 @@ export default function DaySection({
 }: EditFormSectionProps & { wi: number }) {
   const { weekIndex, dayIndex, setDayIndex } = useEditProgramStore();
 
-  const { fields } = useFieldArray({
+  const { fields, remove } = useFieldArray({
     control,
     name: `weeks.${weekIndex}.days` as "weeks.0.days",
   });
@@ -83,6 +83,7 @@ export default function DaySection({
               wi={wi}
               di={di}
               setValue={setValue}
+              removeWorkout={remove}
             />
           </Stack>
         </Tabs.Panel>

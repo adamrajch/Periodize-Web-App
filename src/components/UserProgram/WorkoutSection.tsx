@@ -13,22 +13,40 @@ export default function WorkoutSection({
   wi,
   di,
   setValue,
-}: EditFormSectionProps & { wi: number; di: number }) {
+  removeWorkout,
+}: EditFormSectionProps & {
+  wi: number;
+  di: number;
+  removeWorkout: (index: number) => void;
+}) {
   // const { weekIndex, dayIndex } = useEditProgramStore();
-  const { fields, remove, swap, move } = useFieldArray({
+  const { fields, remove, swap, move, append } = useFieldArray({
     control,
     name: `weeks.${wi}.days.${di}.workouts` as "weeks.0.days.0.workouts",
   });
 
   function onDragEnd(result: DropResult) {
-    const { source, destination, type, combine } = result;
+    const { source, destination, type, combine, draggableId } = result;
     console.log("source: ", source);
     console.log("destination: ", destination);
     console.log("type: ", type);
+    console.log("draggableId: ", draggableId);
+    console.log("combine: ", combine);
 
     if (!destination && !result.combine) {
       // remove(source.index);
       return;
+    }
+
+    if (result.combine && type === "WORKOUTS") {
+      // setValue(`weeks.${wi}.days.${di}.workouts.${source.index}.exercises`, [
+      //   ...getValues(
+      //     `weeks.${wi}.days.${di}.workouts.${source.index}.exercises`
+      //   ),
+      //   getValues(`weeks.${wi}.days.${di}.workouts.${source.index}`),
+      // ]);
+      // removeWorkout(source.index);
+      console.log("here");
     }
 
     if (
@@ -38,10 +56,24 @@ export default function WorkoutSection({
       return;
     }
 
-    if (type === "EXERCISES" && destination?.index) {
+    if (type === "EXERCISES" && destination?.index !== undefined) {
       console.log("swapping exercises");
+      const workoutId = draggableId.substring(draggableId.indexOf("wid:") + 4);
+      console.log(workoutId);
 
-      // setValue(`weeks.${wi}.days.${di}.workouts.${wi}`);
+      const arr = getValues(
+        `weeks.${wi}.days.${di}.workouts.${parseInt(workoutId)}.exercises`
+      );
+
+      const el = arr[source.index];
+
+      arr.splice(source.index, 1);
+      arr.splice(destination.index, 0, el);
+
+      setValue(
+        `weeks.${wi}.days.${di}.workouts.${parseInt(workoutId)}.exercises`,
+        arr
+      );
 
       return;
     }
@@ -55,7 +87,7 @@ export default function WorkoutSection({
   }
   return (
     <DragDropContext onDragEnd={onDragEnd}>
-      <Droppable droppableId="workout-section" type="WORKOUTS">
+      <Droppable droppableId="workout-section" type="WORKOUTS" isCombineEnabled>
         {(provided, snapshot) => (
           <div ref={provided.innerRef}>
             {fields.map((workout, wI) => {
