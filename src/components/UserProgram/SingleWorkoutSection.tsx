@@ -1,10 +1,10 @@
 import { Draggable } from "@hello-pangea/dnd";
-import { ActionIcon, Grid, Group, Menu, Stack, Text } from "@mantine/core";
-import { IconDotsVertical, IconPlus, IconTrash, IconX } from "@tabler/icons";
+import { Group, Text } from "@mantine/core";
 import { useFieldArray } from "react-hook-form";
 import { useEditProgramStore } from "../../lib/slices/editProgramStore";
-import HFNumberInput from "../ui/HFNumberInput";
+import type { SingleWorkoutType } from "../../types/ProgramTypes";
 import type { EditFormSectionProps } from "./DaySection";
+import SingleWorkoutModal from "./SingleWorkoutModal";
 
 export default function SingleWorkoutSection({
   control,
@@ -12,10 +12,13 @@ export default function SingleWorkoutSection({
   removeWorkout,
   workoutIndex,
   id,
+  workout,
+  getValues,
 }: Omit<EditFormSectionProps, "setValue"> & {
   workoutIndex: number;
   id: string;
   removeWorkout: (index?: number | number[]) => void;
+  workout: SingleWorkoutType;
 }) {
   const { weekIndex, dayIndex } = useEditProgramStore();
 
@@ -36,7 +39,12 @@ export default function SingleWorkoutSection({
           {...provided.draggableProps}
           {...provided.dragHandleProps}
         >
-          <Stack>
+          <Group>
+            <Text fw="bold">{workout.name}</Text>
+
+            <SingleWorkoutModal workout={workout} getFormValues={getValues} />
+          </Group>
+          {/* <Stack>
             {fields.map((record, rI) => (
               <Grid key={record.id}>
                 <Grid.Col span={1}>
@@ -143,7 +151,7 @@ export default function SingleWorkoutSection({
                 </Grid.Col>
               </Grid>
             ))}
-          </Stack>
+          </Stack> */}
         </div>
       )}
     </Draggable>
