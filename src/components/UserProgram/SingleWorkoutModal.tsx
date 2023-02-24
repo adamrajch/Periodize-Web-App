@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button, Grid, Group, Stack, Title } from "@mantine/core";
+import { Button, Group, Stack, Text, Title } from "@mantine/core";
 import type { FC } from "react";
 import { useCallback, useEffect } from "react";
 import type { UseFormGetValues } from "react-hook-form";
@@ -107,48 +107,49 @@ export default function SingleWorkoutModal({
           </Group>
           <Stack>
             {fields.map((record, rI) => (
-              <Grid key={record.id}>
-                <Grid.Col span={10}>
-                  <Group grow noWrap>
-                    <HFNumberInput
-                      label="sets"
-                      control={control}
-                      error={errors?.exercises?.[rI]?.sets?.message}
-                      fieldName={`exercises.${rI}.sets`}
-                      value={record.sets}
-                      min={1}
-                      step={1}
-                    />
-                    <HFNumberInput
-                      label="reps"
-                      control={control}
-                      error={errors?.exercises?.[rI]?.reps?.message}
-                      fieldName={`exercises.${rI}.reps`}
-                      value={record.reps}
-                      min={1}
-                      step={1}
-                    />
-                    <HFNumberInput
-                      label="rpe"
-                      control={control}
-                      error={errors?.exercises?.[rI]?.rpe?.message}
-                      fieldName={`exercises.${rI}.rpe`}
-                      value={record.rpe}
-                      min={1}
-                      step={1}
-                    />
-                    <HFNumberInput
-                      label="percent"
-                      control={control}
-                      error={errors?.exercises?.[rI]?.percent?.message}
-                      fieldName={`exercises.${rI}.percent`}
-                      value={record.percent}
-                      min={1}
-                      step={1}
-                    />
-                  </Group>
-                </Grid.Col>
-              </Grid>
+              <Group grow noWrap key={record.id}>
+                <Text sx={{ flexGrow: 0 }}>{rI + 1}</Text>
+                <HFNumberInput
+                  label="sets"
+                  control={control}
+                  error={errors?.exercises?.[rI]?.sets?.message}
+                  fieldName={`exercises.${rI}.sets`}
+                  value={record.sets}
+                  min={1}
+                  step={1}
+                  sx={{ maxWidth: "100%" }}
+                />
+                <HFNumberInput
+                  label="reps"
+                  control={control}
+                  error={errors?.exercises?.[rI]?.reps?.message}
+                  fieldName={`exercises.${rI}.reps`}
+                  value={record.reps}
+                  min={1}
+                  step={1}
+                  sx={{ maxWidth: "100%" }}
+                />
+                <HFNumberInput
+                  label="rpe"
+                  control={control}
+                  error={errors?.exercises?.[rI]?.rpe?.message}
+                  fieldName={`exercises.${rI}.rpe`}
+                  value={record.rpe}
+                  min={1}
+                  step={1}
+                  sx={{ maxWidth: "100%" }}
+                />
+                <HFNumberInput
+                  label="percent"
+                  control={control}
+                  error={errors?.exercises?.[rI]?.percent?.message}
+                  fieldName={`exercises.${rI}.percent`}
+                  value={record.percent}
+                  min={1}
+                  step={1}
+                  sx={{ maxWidth: "100%" }}
+                />
+              </Group>
             ))}
           </Stack>
         </form>
