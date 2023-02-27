@@ -27,6 +27,30 @@ export const programRouter = createTRPCRouter({
       },
     });
   }),
+  searchPrograms: protectedProcedure
+    .input(z.string())
+    .query(({ ctx, input }) => {
+      return ctx.prisma.program.findMany({
+        where: {
+          OR: {
+            author: {
+              name: {
+                contains: input,
+                mode: "insensitive",
+              },
+            },
+            name: {
+              contains: input,
+              mode: "insensitive",
+            },
+
+            categories: {
+              has: input,
+            },
+          },
+        },
+      });
+    }),
   createProgram: protectedProcedure
     .input(WizardDetailsSchema)
     .mutation(({ ctx, input }) => {
