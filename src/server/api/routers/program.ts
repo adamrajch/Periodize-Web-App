@@ -27,29 +27,58 @@ export const programRouter = createTRPCRouter({
       },
     });
   }),
-  searchPrograms: protectedProcedure
-    .input(z.string())
-    .query(({ ctx, input }) => {
-      return ctx.prisma.program.findMany({
+  searchInfinitePrograms: protectedProcedure
+    .input(
+      z.object({
+        query: z.string().min(1).max(40),
+        limit: z.number().min(1).max(100).nullish(),
+        cursor: z.string().nullish(),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      const limit = input.limit ?? 2;
+      const { cursor } = input;
+
+      const programs = await ctx.prisma.program.findMany({
+        take: limit + 1,
+
         where: {
-          OR: {
-            author: {
+          OR: [
+            {
+              author: {
+                name: {
+                  contains: input.query,
+                  mode: "insensitive",
+                },
+              },
               name: {
-                contains: input,
+                contains: input.query,
                 mode: "insensitive",
               },
+              categories: {
+                has: input.query,
+              },
             },
-            name: {
-              contains: input,
-              mode: "insensitive",
-            },
-
-            categories: {
-              has: input,
-            },
-          },
+          ],
+        },
+        cursor: cursor ? { id: cursor } : undefined,
+        orderBy: {
+          id: "asc",
         },
       });
+
+      let nextCursor: typeof cursor | undefined = undefined;
+
+      if (programs.length > limit) {
+        const nextProgram = programs.pop();
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        nextCursor = nextProgram!.id;
+      }
+
+      return {
+        programs,
+        nextCursor,
+      };
     }),
   createProgram: protectedProcedure
     .input(WizardDetailsSchema)

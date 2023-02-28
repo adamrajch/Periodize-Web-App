@@ -1,11 +1,9 @@
-import HFTextInput from "../../components/ui/HFTexInput";
-import { api } from "../../utils/api";
+import SearchProgramsForm from "../../components/program/forms/SearchProgram/SearchProgramsForm";
 
 export default function ProgramsHome() {
-  const { data } = api.program.searchPrograms.useQuery({});
   return (
     <div>
-      <HFTextInput label="Search Programs" placeholder="Bodybuilding" />
+      <SearchProgramsForm />
     </div>
   );
 }
