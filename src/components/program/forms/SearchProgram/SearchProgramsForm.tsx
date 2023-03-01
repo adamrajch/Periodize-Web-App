@@ -21,7 +21,6 @@ export default function SearchProgramsForm() {
         value={query}
         onChange={(e) => setQuery(e.target.value)}
       />
-      {JSON.stringify(q, null, 2)}
     </form>
   );
 }
