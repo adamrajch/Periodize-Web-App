@@ -1,7 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ActionIcon, Button, Group, Stack, Tabs } from "@mantine/core";
 import type { Exercise } from "@prisma/client";
-import { IconFileImport, IconPlus } from "@tabler/icons";
+import { IconFileImport, IconPlus } from "@tabler/icons-react";
 
 import { useRouter } from "next/router";
 import { useCallback, useRef, useState } from "react";

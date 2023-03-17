@@ -1,5 +1,5 @@
 import { ActionIcon, Group, NativeSelect, Stack } from "@mantine/core";
-import { IconX } from "@tabler/icons";
+import { IconX } from "@tabler/icons-react";
 import type { Control } from "react-hook-form";
 import { Controller, useFieldArray } from "react-hook-form";
 import { PROGRAM_PERIODIZATION_STYLES } from "../../../../constants/CreateProgram";

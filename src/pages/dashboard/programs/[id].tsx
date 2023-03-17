@@ -5,7 +5,7 @@ import {
   IconEdit,
   IconSettings,
   IconTrash,
-} from "@tabler/icons";
+} from "@tabler/icons-react";
 import { useRouter } from "next/router";
 import DashboardShell from "../../../components/Dashboard";
 import EditProgramForm from "../../../components/UserProgram/EditProgramForm";

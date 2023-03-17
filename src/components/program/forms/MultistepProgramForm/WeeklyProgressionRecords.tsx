@@ -1,5 +1,5 @@
 import { ActionIcon, SimpleGrid, Stack } from "@mantine/core";
-import { IconX } from "@tabler/icons";
+import { IconX } from "@tabler/icons-react";
 import type { Control } from "react-hook-form";
 import { useFieldArray } from "react-hook-form";
 import type {

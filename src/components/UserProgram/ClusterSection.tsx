@@ -1,6 +1,6 @@
 import { Draggable, Droppable } from "@hello-pangea/dnd";
 import { ActionIcon, Box, Group } from "@mantine/core";
-import { IconX } from "@tabler/icons";
+import { IconX } from "@tabler/icons-react";
 import { useFieldArray } from "react-hook-form";
 import HFNumberInput from "../ui/HFNumberInput";
 import HFTextInput from "../ui/HFTexInput";

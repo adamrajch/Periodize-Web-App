@@ -7,7 +7,6 @@ import {
   UnstyledButton,
 } from "@mantine/core";
 
-import type { TablerIcon } from "@tabler/icons";
 import {
   IconCalendarStats,
   IconDeviceDesktopAnalytics,
@@ -17,7 +16,7 @@ import {
   IconSettings,
   IconSwitchHorizontal,
   IconUser,
-} from "@tabler/icons";
+} from "@tabler/icons-react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import ColorSwitch from "../Global/ColorSwitch";
@@ -56,7 +55,7 @@ const useStyles = createStyles((theme) => ({
 }));
 
 interface NavbarLinkProps {
-  icon: TablerIcon;
+  icon: React.ReactNode;
   label: string;
   active?: boolean;
   href: string;

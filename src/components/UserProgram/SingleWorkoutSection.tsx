@@ -1,6 +1,11 @@
 import { Draggable } from "@hello-pangea/dnd";
 import { ActionIcon, Grid, Group, Menu, Stack, Text } from "@mantine/core";
-import { IconDotsVertical, IconPlus, IconTrash, IconX } from "@tabler/icons";
+import {
+  IconDotsVertical,
+  IconPlus,
+  IconTrash,
+  IconX,
+} from "@tabler/icons-react";
 import { useFieldArray } from "react-hook-form";
 import { useEditProgramStore } from "../../lib/slices/editProgramStore";
 import HFNumberInput from "../ui/HFNumberInput";

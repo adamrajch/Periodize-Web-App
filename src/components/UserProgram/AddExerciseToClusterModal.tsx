@@ -10,7 +10,7 @@ import {
   UnstyledButton,
   useMantineTheme,
 } from "@mantine/core";
-import { IconPlus, IconX } from "@tabler/icons";
+import { IconPlus, IconX } from "@tabler/icons-react";
 import { useCallback, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { z } from "zod";

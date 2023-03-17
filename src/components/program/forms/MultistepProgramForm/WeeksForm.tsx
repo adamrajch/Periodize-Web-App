@@ -1,15 +1,14 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ActionIcon, Button, Group, Stack } from "@mantine/core";
-import { IconMinus } from "@tabler/icons";
+import { IconMinus } from "@tabler/icons-react";
 import HFTextInput from "@ui/HFTexInput";
 import { useRouter } from "next/router";
 import { useCallback, useRef } from "react";
-import { SubmitHandler, useFieldArray, useForm } from "react-hook-form";
+import type { SubmitHandler } from "react-hook-form";
+import { useFieldArray, useForm } from "react-hook-form";
 import { useProgramWizardForm } from "../../../../lib/slices/createProgramWizard";
-import {
-  WizardWeeksFormType,
-  WizardWeeksSchema,
-} from "../../../../types/ProgramTypes";
+import type { WizardWeeksFormType } from "../../../../types/ProgramTypes";
+import { WizardWeeksSchema } from "../../../../types/ProgramTypes";
 
 export default function WizardWeeksForm() {
   const updateForm = useProgramWizardForm((state) => state.updateAction);
@@ -43,7 +42,7 @@ export default function WizardWeeksForm() {
 
       // router.push("/dashboard/create/days");
     },
-    [updateForm, router],
+    [updateForm, router]
   );
 
   const renderCounter = useRef(0);

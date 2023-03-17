@@ -2,7 +2,7 @@
 import type { ColorScheme } from "@mantine/core";
 import { ColorSchemeProvider, MantineProvider } from "@mantine/core";
 import { ModalsProvider } from "@mantine/modals";
-import { NotificationsProvider } from "@mantine/notifications";
+import { Notifications } from "@mantine/notifications";
 import { getCookie, setCookie } from "cookies-next";
 import { SessionProvider } from "next-auth/react";
 import type { AppContext, AppProps } from "next/app";
@@ -44,12 +44,11 @@ const MyApp = (props: AppProps & { color: ColorScheme }) => {
           }}
         >
           <GlobalStyles />
-          <NotificationsProvider>
-            <ModalsProvider>
-              <RouterTransition />
-              <Component {...pageProps} />
-            </ModalsProvider>
-          </NotificationsProvider>
+          <Notifications />
+          <ModalsProvider>
+            <RouterTransition />
+            <Component {...pageProps} />
+          </ModalsProvider>
         </MantineProvider>
       </ColorSchemeProvider>
     </SessionProvider>

@@ -1,5 +1,5 @@
 import { ActionIcon, Group, Stack, Text } from "@mantine/core";
-import { IconPlus, IconX } from "@tabler/icons";
+import { IconPlus, IconX } from "@tabler/icons-react";
 
 import { useFieldArray } from "react-hook-form";
 import type { Control } from "react-hook-form/dist/types";

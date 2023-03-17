@@ -6,7 +6,7 @@ import {
   IconPlus,
   IconTool,
   IconTrash,
-} from "@tabler/icons";
+} from "@tabler/icons-react";
 import { useCallback } from "react";
 import type { SubmitHandler } from "react-hook-form";
 import { useFieldArray, useForm } from "react-hook-form";
