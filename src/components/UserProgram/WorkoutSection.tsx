@@ -102,6 +102,7 @@ export default function WorkoutSection({
                     workoutIndex={wI}
                     removeWorkout={remove}
                     id={workout.id}
+                    workout={workout}
                   />
                 );
               }

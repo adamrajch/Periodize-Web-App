@@ -183,12 +183,6 @@ export default function AddExerciseToClusterModal({
       </Modal>
 
       <Group position="center">
-        <ActionIcon
-          onClick={() => setOpened(true)}
-          gradient={{ from: "teal", to: "lime", deg: 105 }}
-        >
-          <IconPlus />
-        </ActionIcon>
         <Button
           onClick={() => setOpened(true)}
           leftIcon={<IconPlus />}
