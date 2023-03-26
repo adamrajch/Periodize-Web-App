@@ -1,4 +1,11 @@
-import { ActionIcon, Group, Menu, Stack, Title } from "@mantine/core";
+import {
+  ActionIcon,
+  Group,
+  Menu,
+  ScrollArea,
+  Stack,
+  Title,
+} from "@mantine/core";
 
 import {
   IconDeviceFloppy,
@@ -10,6 +17,7 @@ import { useRouter } from "next/router";
 import DashboardShell from "../../../components/Dashboard";
 import EditProgramForm from "../../../components/UserProgram/EditProgramForm";
 import UpdateDetailsModal from "../../../components/UserProgram/UpdateDetailsModal";
+import type { WizardWeeksFormType } from "../../../types/ProgramTypes";
 import { api } from "../../../utils/api";
 
 export default function UserProgramById() {
@@ -65,7 +73,12 @@ export default function UserProgramById() {
             <UpdateDetailsModal program={data} />
           </Group>
           <div>Updated: {data.updatedAt.toDateString()}</div>
-          <EditProgramForm id={data.id} template={data.template} />
+          <ScrollArea h={1000} offsetScrollbars type="scroll">
+            <EditProgramForm
+              id={data.id}
+              template={data.template as WizardWeeksFormType}
+            />
+          </ScrollArea>
         </Stack>
       )}
     </DashboardShell>

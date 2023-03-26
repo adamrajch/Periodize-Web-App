@@ -6,7 +6,7 @@ import {
   TextInput,
 } from "@mantine/core";
 import type { Program } from "@prisma/client";
-import { IconSearch } from "@tabler/icons";
+import { IconSearch } from "@tabler/icons-react";
 import Link from "next/link";
 import { useState } from "react";
 

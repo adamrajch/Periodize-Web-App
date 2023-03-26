@@ -1,5 +1,6 @@
 import type { DropResult } from "@hello-pangea/dnd";
 import { DragDropContext, Droppable } from "@hello-pangea/dnd";
+import { Stack } from "@mantine/core";
 import { useFieldArray } from "react-hook-form";
 import ClusterSection from "./ClusterSection";
 import type { EditFormSectionProps } from "./DaySection";
@@ -89,7 +90,7 @@ export default function WorkoutSection({
     <DragDropContext onDragEnd={onDragEnd}>
       <Droppable droppableId="workout-section" type="WORKOUTS" isCombineEnabled>
         {(provided, snapshot) => (
-          <div ref={provided.innerRef}>
+          <Stack spacing="xl" ref={provided.innerRef}>
             {fields.map((workout, wI) => {
               if (workout.type === "single") {
                 return (
@@ -125,7 +126,7 @@ export default function WorkoutSection({
               }
             })}
             {provided.placeholder}
-          </div>
+          </Stack>
         )}
       </Droppable>
     </DragDropContext>

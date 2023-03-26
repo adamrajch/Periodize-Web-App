@@ -20,6 +20,7 @@ export default function DashboardShell({ children }: DashboardShellProps) {
   const [opened, setOpened] = useState(false);
   return (
     <AppShell
+      padding="lg"
       styles={{
         main: {
           background:

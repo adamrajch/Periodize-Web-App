@@ -1,5 +1,10 @@
 import { ActionIcon, Grid, Group, Menu, Stack, Text } from "@mantine/core";
-import { IconDotsVertical, IconPlus, IconTrash, IconX } from "@tabler/icons";
+import {
+  IconDotsVertical,
+  IconPlus,
+  IconTrash,
+  IconX,
+} from "@tabler/icons-react";
 import { useFieldArray } from "react-hook-form";
 import HFNumberInput from "../ui/HFNumberInput";
 import type { EditFormSectionProps } from "./DaySection";

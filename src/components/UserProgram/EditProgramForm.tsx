@@ -6,7 +6,7 @@ import {
   IconPlus,
   IconTool,
   IconTrash,
-} from "@tabler/icons";
+} from "@tabler/icons-react";
 import { useCallback } from "react";
 import type { SubmitHandler } from "react-hook-form";
 import { useFieldArray, useForm } from "react-hook-form";
@@ -44,19 +44,6 @@ export default function EditProgramForm({ id, template }: EditFormProps) {
   } = useForm<WizardWeeksFormType>({
     defaultValues: {
       weeks: template?.weeks ? template.weeks : [],
-      // weeks: [
-      //   {
-      //     name: "",
-      //     summary: "",
-      //     days: [
-      //       {
-      //         name: "sunday",
-      //         summary: "",
-      //         workouts: [],
-      //       },
-      //     ],
-      //   },
-      // ],
     },
     resolver: zodResolver(WizardWeeksSchema),
   });
@@ -105,8 +92,18 @@ export default function EditProgramForm({ id, template }: EditFormProps) {
     }
   }
   return (
-    <>
+    <div style={{ height: "200vh" }}>
       <form onSubmit={handleSubmit(submitForm)} id="editForm">
+        <Group position="center">
+          <Button
+            type="submit"
+            disabled={!isDirty}
+            loading={isSubmitting}
+            form="editForm"
+          >
+            Save
+          </Button>
+        </Group>
         <pre>{`Week-${weekIndex} Day-${dayIndex}`}</pre>
         <Tabs
           value={`${weekIndex}`}
@@ -177,22 +174,11 @@ export default function EditProgramForm({ id, template }: EditFormProps) {
           ))}
         </Tabs>
 
-        <Group position="center">
-          <Button
-            type="submit"
-            disabled={!isDirty}
-            loading={isSubmitting}
-            form="editForm"
-          >
-            Save
-          </Button>
-        </Group>
-
         <Group align="flex-start">
-          {/* <pre>values: {JSON.stringify(watch(), null, 2)}</pre> */}
-          {/* <pre> errors: {JSON.stringify(errors, null, 2)}</pre> */}
+          <pre>values: {JSON.stringify(watch(), null, 2)}</pre>
+          <pre> errors: {JSON.stringify(errors, null, 2)}</pre>
         </Group>
       </form>
-    </>
+    </div>
   );
 }

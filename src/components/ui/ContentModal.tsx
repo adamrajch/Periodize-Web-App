@@ -43,8 +43,7 @@ export default function ContentModal({
           handleClose();
         }}
       >
-        {" "}
-        {children}{" "}
+        {children}
       </Modal>
       <Group position="center">
         <Trigger onClick={() => setOpened(true)} />

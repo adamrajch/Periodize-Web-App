@@ -1,15 +1,16 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button, Group, Stack, Text, Title } from "@mantine/core";
+import { ActionIcon, Button, Group, Title } from "@mantine/core";
+import { IconTrash } from "@tabler/icons-react";
 import type { FC } from "react";
-import { useCallback, useEffect } from "react";
-import type { UseFormGetValues } from "react-hook-form";
+import { useEffect } from "react";
+import type { Control, UseFormGetValues } from "react-hook-form";
 import { useFieldArray, useForm } from "react-hook-form";
 import { z } from "zod";
 import type {
   SingleWorkoutType,
   WizardWeeksFormType,
 } from "../../types/ProgramTypes";
-import { RecordSchema } from "../../types/ProgramTypes";
+import { SingleWorkout } from "../../types/ProgramTypes";
 import ContentModal from "../ui/ContentModal";
 import HFNumberInput from "../ui/HFNumberInput";
 import HFSelect from "../ui/HFSelect";
@@ -17,10 +18,24 @@ import HFSelect from "../ui/HFSelect";
 type SingleWorkoutModalProps = {
   workout: SingleWorkoutType;
   getFormValues: UseFormGetValues<WizardWeeksFormType>;
+  removeWorkout: (index: number) => void;
+  workoutIndex: number;
+  formControl: Control<WizardWeeksFormType>;
 };
 
+const ExerciseListSchema = z.array(
+  SingleWorkout.and(
+    z.object({
+      weekIndex: z.number(),
+      dayIndex: z.number(),
+      workoutIndex: z.number(),
+    })
+  )
+);
+type ListExercisesType = z.infer<typeof ExerciseListSchema>;
+
 const PeriodizationSchema = z.object({
-  exercises: z.array(RecordSchema),
+  exercises: ExerciseListSchema,
   weekSpan: z.number().min(1).max(16),
   periodization: z
     .enum(["linear", "step", "dup", "conjugate"])
@@ -32,51 +47,82 @@ type PeriodizationFormType = z.infer<typeof PeriodizationSchema>;
 export default function SingleWorkoutModal({
   workout,
   getFormValues,
+  removeWorkout,
+  workoutIndex,
+  formControl,
 }: SingleWorkoutModalProps) {
   const {
     control,
     reset,
     getValues,
-    setValue,
-    register,
     watch,
+    setValue,
     formState: { errors },
   } = useForm<PeriodizationFormType>({
     defaultValues: {
-      exercises: [
-        {
-          sets: 5,
-          reps: 5,
-          rpe: undefined,
-          percent: undefined,
-          exerciseId: "1",
-          exerciseName: "",
-        },
-      ],
+      exercises: getExercises(),
       weekSpan: 1,
       periodization: undefined,
     },
     resolver: zodResolver(PeriodizationSchema),
   });
 
-  const { fields, remove, append } = useFieldArray({
+  const { fields } = useFieldArray({
     control,
     name: "exercises",
   });
+  // const weeks = useWatch({
+  //   control: formControl,
+  //   name: "weeks",
+  // });
+  useEffect(() => {
+    setValue("exercises", getExercises());
+  }, []);
 
-  const handleClose = useCallback(() => {
-    reset();
-  }, [reset]);
+  // const handleClose = useCallback(() => {
+  //   reset();
+  // }, [reset]);
 
-  const submitForm = useCallback(async () => {
-    handleClose();
-  }, [handleClose]);
+  // const submitForm = useCallback(async () => {
+  //   handleClose();
+  // }, [handleClose]);
 
-  useEffect(() => {}, [getValues()]);
+  function getExercises(): ListExercisesType {
+    const list = [];
+
+    const weekLength = getFormValues("weeks").length;
+    for (let i = 0; i < weekLength; i++) {
+      for (let k = 0; k < getFormValues(`weeks.${i}.days`).length; k++) {
+        for (
+          let j = 0;
+          j < getFormValues(`weeks.${i}.days.${k}.workouts`).length;
+          j++
+        ) {
+          if (
+            getFormValues(`weeks.${i}.days.${k}.workouts.${j}.exerciseId`) ===
+              workout.exerciseId &&
+            getFormValues(`weeks.${i}.days.${k}.workouts.${j}.type`) ===
+              "single"
+          )
+            list.push({
+              weekIndex: i,
+              dayIndex: k,
+              workoutIndex: j,
+              ...getFormValues(`weeks.${i}.days.${k}.workouts.${j}`),
+            });
+        }
+      }
+    }
+
+    return list as ListExercisesType;
+  }
 
   const Butt: FC<{ onClick: () => void }> = ({ onClick }) => (
-    <Button onClick={onClick}>Edit</Button>
+    <Button component="span" variant="subtle" onClick={onClick}>
+      {workout.name}
+    </Button>
   );
+
   return (
     <>
       <ContentModal Trigger={Butt} handleClose={() => console.log("hello")}>
@@ -104,8 +150,14 @@ export default function SingleWorkoutModal({
               control={control}
               fieldName="periodization"
             />
+            {/* <ActionIcon onClick={() => getExercises()}>
+              <Icon24Hours />
+            </ActionIcon> */}
+            <ActionIcon onClick={() => removeWorkout(workoutIndex)}>
+              <IconTrash color="red" />
+            </ActionIcon>
           </Group>
-          <Stack>
+          {/* <Stack>
             {fields.map((record, rI) => (
               <Group grow noWrap key={record.id}>
                 <Text sx={{ flexGrow: 0 }}>{rI + 1}</Text>
@@ -151,7 +203,7 @@ export default function SingleWorkoutModal({
                 />
               </Group>
             ))}
-          </Stack>
+          </Stack> */}
         </form>
         <pre>{JSON.stringify(watch(), null, 2)}</pre>
       </ContentModal>
