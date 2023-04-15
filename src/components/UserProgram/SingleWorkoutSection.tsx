@@ -6,7 +6,7 @@ import { useEditProgramStore } from "../../lib/slices/editProgramStore";
 import type { SingleWorkoutType } from "../../types/ProgramTypes";
 import HFNumberInput from "../ui/HFNumberInput";
 import type { EditFormSectionProps } from "./DaySection";
-import SingleWorkoutModal from "./SingleWorkoutModal";
+import WorkoutGenerationModal from "./WorkoutGenerationModal";
 
 export default function SingleWorkoutSection({
   control,
@@ -45,7 +45,15 @@ export default function SingleWorkoutSection({
         >
           <Group align="flex-start">
             <Stack spacing="xs">
-              <SingleWorkoutModal
+              {/* <SingleWorkoutModal
+                workout={workout}
+                getFormValues={getValues}
+                removeWorkout={removeWorkout}
+                workoutIndex={workoutIndex}
+                formControl={control}
+              /> */}
+
+              <WorkoutGenerationModal
                 workout={workout}
                 getFormValues={getValues}
                 removeWorkout={removeWorkout}

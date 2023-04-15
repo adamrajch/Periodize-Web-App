@@ -109,15 +109,16 @@ export default function EditProgramForm({ id, template }: EditFormProps) {
           value={`${weekIndex}`}
           onTabChange={(val) => setWeekIndex(val ? parseInt(val) : 0)}
           orientation="vertical"
+          variant="pills"
         >
           <Tabs.List my="xl">
             <ActionIcon
               onClick={() => append({ name: "", summary: "", days: [] })}
             >
-              <IconPlus>Add Week</IconPlus>
+              <IconPlus />
             </ActionIcon>
             {fields.map((week, wI) => (
-              <Tabs.Tab key={week.id} value={`${wI}`}>
+              <Tabs.Tab key={week.id} value={`${wI}`} color="green">
                 {wI + 1}
               </Tabs.Tab>
             ))}

@@ -1,5 +1,4 @@
 import { type NextPage } from "next";
-import { signIn, signOut, useSession } from "next-auth/react";
 import Head from "next/head";
 import Link from "next/link";
 import CreatePublicExerciseForm from "../components/exercise/CreatePublicExerciseForm";
@@ -7,7 +6,8 @@ import ExerciseList from "../components/exercise/ExerciseList";
 import SearchLifts from "../components/exercise/SearchLifts";
 
 import ColorSwitch from "../components/Global/ColorSwitch";
-import { api } from "../utils/api";
+
+import { HomeHeader } from "../components/Global/Headers/HomeHeader";
 
 const Home: NextPage = () => {
   return (
@@ -18,13 +18,13 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main>
+        <HomeHeader />
         <div>
           <nav>
             <Link href="create/details">Create A Progam</Link>
           </nav>
           <ColorSwitch />
 
-          <AuthShowcase />
           <CreatePublicExerciseForm />
           <ExerciseList />
           <SearchLifts />
@@ -35,27 +35,3 @@ const Home: NextPage = () => {
 };
 
 export default Home;
-
-const AuthShowcase: React.FC = () => {
-  const { data: sessionData } = useSession();
-
-  const { data: secretMessage } = api.example.getSecretMessage.useQuery(
-    undefined, // no input
-    { enabled: sessionData?.user !== undefined }
-  );
-
-  console.log("sessionData: ", sessionData);
-  return (
-    <div>
-      <p>
-        {sessionData && <span>Logged in as {sessionData.user?.name}</span>}
-        {secretMessage && <span> - {secretMessage} </span>}
-      </p>
-      <button
-        onClick={sessionData ? () => void signOut() : () => void signIn()}
-      >
-        {sessionData ? "Sign out" : "Sign in"}
-      </button>
-    </div>
-  );
-};
